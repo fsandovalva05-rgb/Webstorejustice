@@ -8,74 +8,66 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <style>
-        /* Fondo negro absoluto en lugar de gris oscuro */
         body { background-color: #000000; color: #ffffff; font-family: 'Rajdhani', sans-serif; scroll-behavior: smooth; overflow-x: hidden; }
         .orange-glow { text-shadow: 0 0 15px #ff6600; }
-        .glass-card { 
-            background: rgba(10, 10, 10, 0.9); 
-            backdrop-filter: blur(10px); 
-            border: 1px solid rgba(255, 102, 0, 0.1); 
-            transition: 0.4s ease;
-        }
-        .glass-card:hover { border-color: #ff6600; transform: translateY(-10px); box-shadow: 0 0 20px rgba(255, 102, 0, 0.2); }
-        .bg-hero {
-            /* Degradado negro puro para el banner */
-            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.95)), 
-                        url('https://media-rockstargames-com.akamaized.net/rockstargames-newsite/img/global/games/fob/640/gtao_drugwars.jpg');
-            background-size: cover; background-position: center;
-        }
+        .glass-card { background: rgba(10, 10, 10, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(255, 102, 0, 0.1); transition: 0.4s ease; }
+        .glass-card:hover { border-color: #ff6600; transform: translateY(-5px); box-shadow: 0 0 20px rgba(255, 102, 0, 0.2); }
+        .bg-hero { background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.95)), url('https://media-rockstargames-com.akamaized.net/rockstargames-newsite/img/global/games/fob/640/gtao_drugwars.jpg'); background-size: cover; background-position: center; }
         .discord-float { position: fixed; bottom: 25px; right: 25px; background: #5865F2; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; z-index: 90; border: 2px solid white; box-shadow: 0 0 20px rgba(88, 101, 242, 0.5); }
-        
-        /* Estilos personalizados para el menú y el carrito */
         .dropdown-menu { display: none; }
         .group:hover .dropdown-menu { display: block; }
+        .star-rating i { cursor: pointer; color: #555; transition: 0.2s; }
+        .star-rating i:hover, .star-rating i.active { color: #ffcc00; }
     </style>
 </head>
 <body class="min-h-screen">
+
+    <div id="login-modal" class="fixed inset-0 bg-black/90 z-[200] hidden flex items-center justify-center backdrop-blur-sm">
+        <div class="glass-card p-8 rounded-xl w-full max-w-md relative border-t-4 border-[#ff6600]">
+            <button onclick="toggleLogin()" class="absolute top-4 right-4 text-2xl hover:text-[#ff6600]">&times;</button>
+            <h2 class="text-3xl font-black italic mb-6 text-center uppercase text-[#ff6600]">Acceso Cliente</h2>
+            
+            <button onclick="loginWithGoogle()" class="w-full bg-white text-black font-bold py-3 rounded flex items-center justify-center space-x-3 hover:bg-gray-200 transition mb-6 shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" class="w-5 h-5">
+                <span>Continuar con Google</span>
+            </button>
+            
+            <div class="text-center text-sm text-gray-400 mt-4">Inicia sesión para poder comentar y calificar.</div>
+        </div>
+    </div>
 
     <div id="cart-sidebar" class="fixed top-0 right-0 w-80 h-full bg-black border-l border-[#ff6600] transform translate-x-full transition-transform duration-300 z-[100] flex flex-col">
         <div class="p-6 border-b border-orange-900/50 flex justify-between items-center">
             <h2 class="text-2xl font-black italic uppercase text-[#ff6600]">Tu Carrito</h2>
             <button onclick="toggleCart()" class="text-3xl hover:text-[#ff6600] transition">&times;</button>
         </div>
-        <div id="cart-items" class="p-6 flex-1 overflow-y-auto text-gray-400 text-sm font-bold">
-            El carrito está vacío.
-        </div>
+        <div id="cart-items" class="p-6 flex-1 overflow-y-auto text-gray-400 text-sm font-bold">El carrito está vacío.</div>
         <div class="p-6 border-t border-orange-900/50 bg-[#0a0a0a]">
-            <div class="flex justify-between text-xl font-black mb-4">
-                <span>TOTAL:</span>
-                <span id="cart-total" class="text-[#ff6600]">$0.00</span>
-            </div>
-            <button class="w-full bg-[#ff6600] text-black font-black py-3 uppercase italic tracking-widest hover:scale-105 transition">Proceder al Pago</button>
+            <div class="flex justify-between text-xl font-black mb-4"><span>TOTAL:</span><span id="cart-total" class="text-[#ff6600]">$0.00</span></div>
+            <button class="w-full bg-[#ff6600] text-black font-black py-3 uppercase italic tracking-widest hover:scale-105 transition">Pagar con PayPal</button>
         </div>
     </div>
     <div id="cart-overlay" onclick="toggleCart()" class="fixed inset-0 bg-black/80 z-[95] hidden backdrop-blur-sm"></div>
 
-    <a href="https://discord.gg/DgDJmYm8S4" target="_blank" class="discord-float hover:scale-110 transition">
-        <i class="fab fa-discord text-white"></i>
-    </a>
+    <a href="https://discord.gg/DgDJmYm8S4" target="_blank" class="discord-float hover:scale-110 transition"><i class="fab fa-discord text-white"></i></a>
 
     <nav class="p-6 flex justify-between items-center max-w-7xl mx-auto border-b border-orange-900/30 relative z-50">
         <h1 class="text-3xl font-extrabold italic uppercase tracking-tighter">GTAV<span class="text-[#ff6600] orange-glow">TUNING</span></h1>
-        
         <div class="hidden lg:flex space-x-6 font-bold uppercase text-xs tracking-widest items-center">
             <a href="#packs" class="hover:text-[#ff6600] transition">Justice Packs</a>
-            <a href="#faq" class="hover:text-[#ff6600] transition">Preguntas Frecuentes</a>
+            <a href="#faq" class="hover:text-[#ff6600] transition">Comunidad / FAQ</a>
             <a href="#pagos" class="hover:text-[#ff6600] transition">Medios de Pago</a>
-            <a href="https://discord.gg/DgDJmYm8S4" target="_blank" class="text-[#5865F2]"><i class="fab fa-discord text-lg"></i></a>
         </div>
-
         <div class="flex items-center space-x-6">
             
-            <div class="relative group cursor-pointer">
-                <div class="flex items-center space-x-2 hover:text-[#ff6600] transition py-2">
+            <div class="relative group cursor-pointer" id="user-menu-container">
+                <div onclick="toggleLogin()" id="user-menu-btn" class="flex items-center space-x-2 hover:text-[#ff6600] transition py-2">
                     <i class="fas fa-user-circle text-xl"></i>
-                    <span class="font-bold text-sm uppercase hidden md:inline">Mi Cuenta</span>
-                    <i class="fas fa-chevron-down text-xs"></i>
+                    <span class="font-bold text-sm uppercase hidden md:inline">Iniciar Sesión</span>
                 </div>
-                <div class="dropdown-menu absolute right-0 mt-1 w-48 bg-[#0a0a0a] border border-orange-500/30 rounded shadow-xl z-50">
+                <div id="user-dropdown" class="dropdown-menu absolute right-0 mt-1 w-48 bg-[#0a0a0a] border border-orange-500/30 rounded shadow-xl z-50 hidden">
                     <a href="#" class="block px-4 py-3 text-sm font-bold uppercase hover:bg-[#ff6600] hover:text-black transition"><i class="fas fa-shopping-bag mr-2"></i> Mis Compras</a>
-                    <a href="#" class="block px-4 py-3 text-sm font-bold uppercase hover:bg-[#ff6600] hover:text-black transition border-t border-orange-900/50"><i class="fas fa-id-card mr-2"></i> Mis Datos</a>
+                    <a href="#" onclick="logoutApp()" class="block px-4 py-3 text-sm font-bold uppercase hover:bg-red-500 hover:text-white transition border-t border-orange-900/50"><i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión</a>
                 </div>
             </div>
 
@@ -92,20 +84,17 @@
     </header>
 
     <section id="packs" class="max-w-7xl mx-auto px-6 py-20 grid grid-cols-1 md:grid-cols-3 gap-8">
-        
         <div class="glass-card p-6 rounded-xl flex flex-col justify-between">
             <img src="https://media-rockstargames-com.akamaized.net/mainsite/img/global/games/fob/640/V.jpg" class="w-full h-48 object-cover rounded-lg mb-6 border border-orange-600/30">
             <div>
                 <h3 class="text-2xl font-black italic mb-4 uppercase text-[#ff6600]">Starter Pack</h3>
                 <ul class="text-gray-400 mb-8 space-y-3 font-bold text-sm uppercase">
-                    <li><i class="fas fa-dollar-sign text-[#ff6600] mr-2"></i> $20,000,000 Cash</li>
-                    <li><i class="fas fa-car text-[#ff6600] mr-2"></i> 6 Autos Exclusivos</li>
-                    <li><i class="fas fa-chart-line text-[#ff6600] mr-2"></i> Estadísticas Max</li>
-                    <li><i class="fas fa-crosshairs text-[#ff6600] mr-2"></i> Puntería Max</li>
+                    <li><i class="fas fa-check text-[#ff6600] mr-2"></i> $20,000,000 Cash</li>
+                    <li><i class="fas fa-check text-[#ff6600] mr-2"></i> 6 Autos Exclusivos</li>
+                    <li><i class="fas fa-check text-[#ff6600] mr-2"></i> Estadísticas Max</li>
                 </ul>
                 <div class="text-4xl font-black mb-4 italic">$5.00</div>
-                <button onclick="addToCart('Starter Pack', 5.00)" class="w-full border border-[#ff6600] text-[#ff6600] hover:bg-[#ff6600] hover:text-black font-black py-2 mb-2 uppercase transition text-sm">Añadir al Carrito</button>
-                <div id="paypal-starter"></div>
+                <button onclick="addToCart('Starter Pack', 5.00)" class="w-full border border-[#ff6600] text-[#ff6600] hover:bg-[#ff6600] hover:text-black font-black py-2 mb-2 uppercase transition">Añadir al Carrito</button>
             </div>
         </div>
 
@@ -113,15 +102,13 @@
             <img src="https://media-rockstargames-com.akamaized.net/rockstargames-newsite/img/global/news/upload/actual_15638945.jpg" class="w-full h-48 object-cover rounded-lg mb-6 border border-orange-600/50">
             <div>
                 <h3 class="text-2xl font-black italic mb-4 uppercase text-[#ff6600]">Advanced Pack</h3>
-                <ul class="text-gray-200 mb-8 space-y-3 font-bold text-sm uppercase tracking-wide">
-                    <li><i class="fas fa-dollar-sign text-[#ff6600] mr-2"></i> $40,000,000 Cash</li>
-                    <li><i class="fas fa-car text-[#ff6600] mr-2"></i> 10 Autos Premium</li>
-                    <li><i class="fas fa-chart-line text-[#ff6600] mr-2"></i> Estadísticas Max</li>
-                    <li><i class="fas fa-up-long text-[#ff6600] mr-2"></i> 100 Niveles Boost</li>
+                <ul class="text-gray-200 mb-8 space-y-3 font-bold text-sm uppercase">
+                    <li><i class="fas fa-check text-[#ff6600] mr-2"></i> $40,000,000 Cash</li>
+                    <li><i class="fas fa-check text-[#ff6600] mr-2"></i> 10 Autos Premium</li>
+                    <li><i class="fas fa-check text-[#ff6600] mr-2"></i> 100 Niveles Boost</li>
                 </ul>
                 <div class="text-4xl font-black mb-4 italic">$15.00</div>
-                <button onclick="addToCart('Advanced Pack', 15.00)" class="w-full border border-[#ff6600] text-[#ff6600] hover:bg-[#ff6600] hover:text-black font-black py-2 mb-2 uppercase transition text-sm">Añadir al Carrito</button>
-                <div id="paypal-advanced"></div>
+                <button onclick="addToCart('Advanced Pack', 15.00)" class="w-full border border-[#ff6600] text-[#ff6600] hover:bg-[#ff6600] hover:text-black font-black py-2 mb-2 uppercase transition">Añadir al Carrito</button>
             </div>
         </div>
 
@@ -130,115 +117,208 @@
             <div>
                 <h3 class="text-2xl font-black italic mb-4 uppercase text-[#ff6600]">Premium Pack</h3>
                 <ul class="text-gray-400 mb-8 space-y-3 font-bold text-sm uppercase">
-                    <li><i class="fas fa-dollar-sign text-[#ff6600] mr-2"></i> $60,000,000 Cash</li>
-                    <li><i class="fas fa-car text-[#ff6600] mr-2"></i> 16 Autos de Lujo</li>
-                    <li><i class="fas fa-gift text-[#ff6600] mr-2"></i> 100 Niveles + Full Pack</li>
-                    <li><li class="italic text-white">"Regalo: Todo lo anterior"</li></li>
+                    <li><i class="fas fa-check text-[#ff6600] mr-2"></i> $60,000,000 Cash</li>
+                    <li><i class="fas fa-check text-[#ff6600] mr-2"></i> 16 Autos de Lujo</li>
+                    <li><i class="fas fa-gift text-[#ff6600] mr-2"></i> Regalo: Todo lo anterior</li>
                 </ul>
                 <div class="text-4xl font-black mb-4 italic">$25.00</div>
-                <button onclick="addToCart('Premium Pack', 25.00)" class="w-full border border-[#ff6600] text-[#ff6600] hover:bg-[#ff6600] hover:text-black font-black py-2 mb-2 uppercase transition text-sm">Añadir al Carrito</button>
-                <div id="paypal-premium"></div>
+                <button onclick="addToCart('Premium Pack', 25.00)" class="w-full border border-[#ff6600] text-[#ff6600] hover:bg-[#ff6600] hover:text-black font-black py-2 mb-2 uppercase transition">Añadir al Carrito</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="pagos" class="max-w-4xl mx-auto px-6 py-10 text-center border-t border-orange-900/30">
+        <h2 class="text-3xl font-black italic uppercase mb-6 text-[#ff6600]">Medio de Pago Oficial</h2>
+        <div class="glass-card p-8 rounded-xl inline-block">
+            <i class="fab fa-paypal text-6xl text-blue-500 mb-4"></i>
+            <p class="text-gray-300 font-bold mb-2">Actualmente procesamos pagos de forma segura ÚNICAMENTE a través de PayPal.</p>
+            <p class="text-sm text-gray-500">Esto garantiza la protección del comprador y la entrega inmediata del servicio.</p>
+        </div>
+    </section>
+
+    <section id="faq" class="max-w-4xl mx-auto px-6 py-20">
+        <h2 class="text-3xl font-black italic uppercase mb-8 text-[#ff6600] border-b border-orange-900/30 pb-4">Comunidad y Preguntas</h2>
+        
+        <div class="glass-card p-6 rounded-xl mb-10">
+            <h3 class="font-bold uppercase text-sm mb-3">Haz una pregunta pública:</h3>
+            <div class="flex space-x-4">
+                <input type="text" id="faq-input" placeholder="Inicia sesión para poder preguntar..." class="flex-1 bg-[#0a0a0a] border border-orange-900/50 p-3 rounded text-white focus:border-[#ff6600] outline-none">
+                <button onclick="submitQuestion()" class="bg-[#ff6600] text-black font-black px-6 uppercase italic hover:scale-105 transition rounded">Publicar</button>
             </div>
         </div>
 
+        <div id="faq-list" class="space-y-6">
+            <div class="text-center text-gray-500 text-sm">Cargando comentarios...</div>
+        </div>
     </section>
 
     <footer class="p-10 text-center opacity-40 border-t border-orange-900/10">
         <p class="text-[10px] uppercase tracking-[1em]">&copy; 2026 GTAV TUNING | JUSTICE SERIES</p>
     </footer>
 
-    <script src="https://www.paypal.com/sdk/js?client-id=sb&currency=USD"></script>
+    <script type="module">
+        // Importaciones con la versión 12.10.0 exacta
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-    <script>
-        // LÓGICA DEL CARRITO DE COMPRAS
-        let cart = [];
-        
-        function toggleCart() {
-            const sidebar = document.getElementById('cart-sidebar');
-            const overlay = document.getElementById('cart-overlay');
-            
-            if (sidebar.classList.contains('translate-x-full')) {
-                sidebar.classList.remove('translate-x-full');
-                overlay.classList.remove('hidden');
+        // Tu configuración
+        const firebaseConfig = {
+            apiKey: "AIzaSyA2F4C7Oy4Kf63OtmNXbcMt2VFlYabw984",
+            authDomain: "gtav-tuning.firebaseapp.com",
+            projectId: "gtav-tuning",
+            storageBucket: "gtav-tuning.firebasestorage.app",
+            messagingSenderId: "1041891301932",
+            appId: "1:1041891301932:web:9fcd9ad3c9c67838ab4f89",
+            measurementId: "G-XMJLEN8SEZ"
+        };
+
+        // Inicializar App
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        let currentUser = null;
+
+        // --- SISTEMA DE AUTENTICACIÓN (LOGIN) ---
+        window.loginWithGoogle = () => {
+            signInWithPopup(auth, provider).then(() => {
+                document.getElementById('login-modal').classList.add('hidden');
+            }).catch(err => alert("Error: " + err.message));
+        };
+
+        window.logoutApp = () => { signOut(auth); };
+        window.toggleLogin = () => { if(!currentUser) document.getElementById('login-modal').classList.toggle('hidden'); };
+
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            const menuBtn = document.getElementById('user-menu-btn');
+            const dropdown = document.getElementById('user-dropdown');
+            const faqInput = document.getElementById('faq-input');
+
+            if (user) {
+                // Cambiar botón superior por la foto
+                menuBtn.innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full border border-[#ff6600]"> <span class="font-bold text-sm uppercase hidden md:inline text-[#ff6600]">${user.displayName.split(' ')[0]}</span>`;
+                menuBtn.onclick = null; 
+                dropdown.classList.remove('hidden'); 
+                faqInput.placeholder = "Escribe tu pregunta aquí...";
             } else {
-                sidebar.classList.add('translate-x-full');
-                overlay.classList.add('hidden');
+                menuBtn.innerHTML = `<i class="fas fa-user-circle text-xl"></i> <span class="font-bold text-sm uppercase hidden md:inline">Iniciar Sesión</span>`;
+                menuBtn.onclick = toggleLogin;
+                dropdown.classList.add('hidden');
+                faqInput.placeholder = "Inicia sesión para poder preguntar...";
             }
-        }
+        });
 
-        function addToCart(name, price) {
-            cart.push({ name, price });
-            updateCartUI();
-            
-            // Efecto visual rápido para confirmar
-            toggleCart();
-            setTimeout(toggleCart, 1500); 
-        }
+        // --- SISTEMA DE BASE DE DATOS (PREGUNTAS) ---
+        window.submitQuestion = async () => {
+            if(!currentUser) return alert("Por favor, inicia sesión con Google para comentar.");
+            const input = document.getElementById('faq-input');
+            const text = input.value.trim();
+            if(!text) return;
 
-        function removeFromCart(index) {
-            cart.splice(index, 1);
-            updateCartUI();
-        }
+            try {
+                await addDoc(collection(db, "faqs"), {
+                    text: text,
+                    author: currentUser.displayName,
+                    photo: currentUser.photoURL,
+                    timestamp: serverTimestamp(),
+                    replies: []
+                });
+                input.value = '';
+            } catch(e) { console.error(e); }
+        };
 
-        function updateCartUI() {
-            const itemsContainer = document.getElementById('cart-items');
-            const totalElement = document.getElementById('cart-total');
-            const countBadge = document.getElementById('cart-count');
+        window.submitReply = async (docId) => {
+            if(!currentUser) return alert("Inicia sesión para responder.");
+            const input = document.getElementById(`reply-input-${docId}`);
+            const text = input.value.trim();
+            if(!text) return;
+
+            try {
+                const faqRef = doc(db, "faqs", docId);
+                await updateDoc(faqRef, {
+                    replies: arrayUnion({
+                        text: text,
+                        author: currentUser.displayName,
+                        time: new Date().getTime()
+                    })
+                });
+                input.value = '';
+            } catch(e) { console.error(e); }
+        };
+
+        // Leer preguntas en tiempo real
+        const qQuery = query(collection(db, "faqs"), orderBy("timestamp", "desc"));
+        onSnapshot(qQuery, (snapshot) => {
+            const list = document.getElementById('faq-list');
+            list.innerHTML = '';
             
-            countBadge.innerText = cart.length;
-            
-            if (cart.length === 0) {
-                itemsContainer.innerHTML = 'Tu carrito está vacío.';
-                totalElement.innerText = '$0.00';
+            if(snapshot.empty) {
+                list.innerHTML = '<div class="text-center text-gray-500">Aún no hay preguntas. ¡Sé el primero!</div>';
                 return;
             }
 
-            let html = '';
-            let total = 0;
+            snapshot.forEach((docSnap) => {
+                const data = docSnap.data();
+                const id = docSnap.id;
+                
+                let repliesHtml = '';
+                if(data.replies && data.replies.length > 0) {
+                    data.replies.forEach(r => {
+                        repliesHtml += `
+                        <div class="bg-[#0a0a0a] p-4 rounded border border-white/5 mt-3">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-[#ff6600] font-bold text-xs">${r.author}</span>
+                                <div class="star-rating text-xs space-x-1"><i class="fas fa-star active"></i><i class="fas fa-star active"></i><i class="fas fa-star active"></i><i class="fas fa-star active"></i><i class="fas fa-star active"></i></div>
+                            </div>
+                            <p class="text-gray-400 text-sm">${r.text}</p>
+                        </div>`;
+                    });
+                }
 
+                list.innerHTML += `
+                <div class="glass-card p-6 rounded-xl">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <img src="${data.photo || 'https://via.placeholder.com/40'}" class="w-8 h-8 rounded-full">
+                        <span class="font-bold text-white">${data.author}</span>
+                    </div>
+                    <div class="text-lg mb-2 text-gray-200">"${data.text}"</div>
+                    
+                    <div class="ml-8 border-l-2 border-orange-900/50 pl-4 mt-4">
+                        ${repliesHtml}
+                        <div class="mt-4 flex space-x-2">
+                            <input type="text" id="reply-input-${id}" placeholder="Responder..." class="flex-1 bg-[#0a0a0a] border border-gray-800 p-2 text-sm rounded text-white focus:border-[#ff6600] outline-none">
+                            <button onclick="submitReply('${id}')" class="bg-gray-800 hover:bg-[#ff6600] hover:text-black text-xs font-bold px-4 transition rounded">Enviar</button>
+                        </div>
+                    </div>
+                </div>`;
+            });
+        });
+
+        // --- SISTEMA DE CARRITO ---
+        let cart = [];
+        window.toggleCart = () => {
+            document.getElementById('cart-sidebar').classList.toggle('translate-x-full');
+            document.getElementById('cart-overlay').classList.toggle('hidden');
+        };
+        window.addToCart = (name, price) => {
+            cart.push({ name, price }); updateCartUI();
+            toggleCart(); setTimeout(toggleCart, 1500);
+        };
+        window.removeFromCart = (index) => { cart.splice(index, 1); updateCartUI(); };
+        function updateCartUI() {
+            const container = document.getElementById('cart-items');
+            document.getElementById('cart-count').innerText = cart.length;
+            if(cart.length === 0) { container.innerHTML = 'El carrito está vacío.'; document.getElementById('cart-total').innerText = '$0.00'; return; }
+            let html = '', total = 0;
             cart.forEach((item, index) => {
                 total += item.price;
-                html += `
-                    <div class="flex justify-between items-center mb-4 border-b border-orange-900/30 pb-2">
-                        <div>
-                            <div class="text-[#ff6600] uppercase">${item.name}</div>
-                            <div class="text-white">$${item.price.toFixed(2)}</div>
-                        </div>
-                        <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-400"><i class="fas fa-trash"></i></button>
-                    </div>
-                `;
+                html += `<div class="flex justify-between items-center mb-4 border-b border-orange-900/30 pb-2"><div><div class="text-[#ff6600] uppercase">${item.name}</div><div class="text-white">$${item.price.toFixed(2)}</div></div><button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-400"><i class="fas fa-trash"></i></button></div>`;
             });
-
-            itemsContainer.innerHTML = html;
-            totalElement.innerText = '$' + total.toFixed(2);
+            container.innerHTML = html; document.getElementById('cart-total').innerText = '$' + total.toFixed(2);
         }
-
-        // LÓGICA DE PAYPAL
-        function initPayPal() {
-            const config = [
-                { id: '#paypal-starter', amt: '5.00' },
-                { id: '#paypal-advanced', amt: '15.00' },
-                { id: '#paypal-premium', amt: '25.00' }
-            ];
-
-            config.forEach(p => {
-                if(document.querySelector(p.id)) {
-                    paypal.Buttons({
-                        style: { color: 'black', shape: 'rect', label: 'pay', height: 35 },
-                        createOrder: (data, actions) => {
-                            return actions.order.create({ purchase_units: [{ amount: { value: p.amt } }] });
-                        },
-                        onApprove: (data, actions) => {
-                            return actions.order.capture().then(det => {
-                                alert('¡PAGO EXITOSO! Únete al Discord para procesar tu Justice Pack.');
-                                window.location.href = "https://discord.gg/DgDJmYm8S4";
-                            });
-                        }
-                    }).render(p.id);
-                }
-            });
-        }
-        window.addEventListener('load', initPayPal);
     </script>
 </body>
 </html>
