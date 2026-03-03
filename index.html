@@ -8,54 +8,34 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script type="text/javascript">
-       (function(){
-          emailjs.init("BDjmyb5WlpSDTPGxV");
-       })();
-    </script>
+    <script src="https://www.paypalobjects.com/ncp/cart/cart.js" data-merchant-id="9XJYURW442CAG"></script>
 
     <style>
         body { background-color: #000000; color: #ffffff; font-family: 'Rajdhani', sans-serif; scroll-behavior: smooth; overflow-x: hidden; }
         .orange-glow { text-shadow: 0 0 15px #ff6600; }
-        .glass-card { background: rgba(10, 10, 10, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(255, 102, 0, 0.1); transition: 0.4s ease; }
+        .glass-card { background: rgba(10, 10, 10, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(255, 102, 0, 0.1); transition: 0.4s ease; height: 100%; display: flex; flex-direction: column; }
         .glass-card:hover { border-color: #ff6600; transform: translateY(-5px); box-shadow: 0 0 20px rgba(255, 102, 0, 0.2); }
         .bg-hero { background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.95)), url('https://media-rockstargames-com.akamaized.net/rockstargames-newsite/img/global/games/fob/640/gtao_drugwars.jpg'); background-size: cover; background-position: center; }
         .discord-float { position: fixed; bottom: 25px; right: 25px; background: #5865F2; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; z-index: 90; border: 2px solid white; box-shadow: 0 0 20px rgba(88, 101, 242, 0.5); }
-        .dropdown-menu { display: none; }
-        .group:hover .dropdown-menu { display: block; }
-        .star-rating i { cursor: pointer; color: #555; transition: 0.2s; }
-        .star-rating i:hover, .star-rating i.active { color: #ffcc00; }
         .tab-hidden { display: none !important; }
         .tab-active { color: #ff6600; border-bottom: 2px solid #ff6600; }
+        /* Ajuste para que los botones de PayPal se vean bien en fondo oscuro */
+        paypal-add-to-cart-button, paypal-cart-button { display: block; margin-top: 10px; }
     </style>
 </head>
 <body class="min-h-screen">
 
     <div id="login-modal" class="fixed inset-0 bg-black/90 z-[200] hidden flex items-center justify-center backdrop-blur-sm">
-        <div class="glass-card p-8 rounded-xl w-full max-w-md relative border-t-4 border-[#ff6600]">
+        <div class="glass-card p-8 rounded-xl w-full max-w-md relative border-t-4 border-[#ff6600] !h-auto">
             <button onclick="toggleLogin()" class="absolute top-4 right-4 text-2xl hover:text-[#ff6600]">&times;</button>
             <h2 class="text-3xl font-black italic mb-6 text-center uppercase text-[#ff6600]">Acceso Cliente</h2>
             <button onclick="loginWithGoogle()" class="w-full bg-white text-black font-bold py-3 rounded flex items-center justify-center space-x-3 hover:bg-gray-200 transition mb-6 shadow-[0_0_15px_rgba(255,255,255,0.2)]">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" class="w-5 h-5">
                 <span>Continuar con Google</span>
             </button>
-            <div class="text-center text-sm text-gray-400 mt-4">Inicia sesión para poder comprar y comentar.</div>
+            <div class="text-center text-sm text-gray-400 mt-4">Inicia sesión para una mejor experiencia.</div>
         </div>
     </div>
-
-    <div id="cart-sidebar" class="fixed top-0 right-0 w-80 h-full bg-black border-l border-[#ff6600] transform translate-x-full transition-transform duration-300 z-[100] flex flex-col">
-        <div class="p-6 border-b border-orange-900/50 flex justify-between items-center">
-            <h2 class="text-2xl font-black italic uppercase text-[#ff6600]">Tu Carrito</h2>
-            <button onclick="toggleCart()" class="text-3xl hover:text-[#ff6600] transition">&times;</button>
-        </div>
-        <div id="cart-items" class="p-6 flex-1 overflow-y-auto text-gray-400 text-sm font-bold">El carrito está vacío.</div>
-        <div class="p-6 border-t border-orange-900/50 bg-[#0a0a0a]">
-            <div class="flex justify-between text-xl font-black mb-4"><span>TOTAL:</span><span id="cart-total" class="text-[#ff6600]">$0.00</span></div>
-            <button onclick="procesarPago()" class="w-full bg-[#ff6600] text-black font-black py-3 uppercase italic tracking-widest hover:scale-105 transition">Pagar y Confirmar</button>
-        </div>
-    </div>
-    <div id="cart-overlay" onclick="toggleCart()" class="fixed inset-0 bg-black/80 z-[95] hidden backdrop-blur-sm"></div>
 
     <a href="https://discord.gg/DgDJmYm8S4" target="_blank" class="discord-float hover:scale-110 transition"><i class="fab fa-discord text-white"></i></a>
 
@@ -64,8 +44,6 @@
         
         <div class="hidden lg:flex space-x-6 font-bold uppercase text-xs tracking-widest items-center">
             <button onclick="showTab('packs')" id="btn-packs" class="tab-btn tab-active hover:text-[#ff6600] transition pb-1">Justice Packs</button>
-            <button onclick="showTab('faq')" id="btn-faq" class="tab-btn hover:text-[#ff6600] transition pb-1">Comunidad / FAQ</button>
-            <button onclick="showTab('pagos')" id="btn-pagos" class="tab-btn hover:text-[#ff6600] transition pb-1">Medios de Pago</button>
         </div>
 
         <div class="flex items-center space-x-6">
@@ -74,14 +52,11 @@
                     <i class="fas fa-user-circle text-xl"></i>
                     <span class="font-bold text-sm uppercase hidden md:inline">Iniciar Sesión</span>
                 </div>
-                <div id="user-dropdown" class="dropdown-menu absolute right-0 mt-1 w-48 bg-[#0a0a0a] border border-orange-500/30 rounded shadow-xl z-50 hidden">
-                    <a href="#" class="block px-4 py-3 text-sm font-bold uppercase hover:bg-[#ff6600] hover:text-black transition"><i class="fas fa-shopping-bag mr-2"></i> Mis Compras</a>
-                    <a href="#" onclick="logoutApp()" class="block px-4 py-3 text-sm font-bold uppercase hover:bg-red-500 hover:text-white transition border-t border-orange-900/50"><i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión</a>
-                </div>
             </div>
-            <div class="relative cursor-pointer hover:text-[#ff6600] transition" onclick="toggleCart()">
-                <i class="fas fa-shopping-cart text-xl"></i>
-                <span id="cart-count" class="absolute -top-2 -right-3 bg-[#ff6600] text-black text-[10px] font-black px-1.5 py-0.5 rounded-full">0</span>
+            
+            <div class="relative">
+                <paypal-cart-button data-id="pp-view-cart"></paypal-cart-button>
+                <script>cartPaypal.Cart({ id: "pp-view-cart" })</script>
             </div>
         </div>
     </nav>
@@ -92,87 +67,56 @@
     </header>
 
     <main class="min-h-[50vh]">
-        
         <section id="packs" class="tab-content max-w-7xl mx-auto px-6 py-20 grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="glass-card p-6 rounded-xl flex flex-col justify-between">
+            
+            <div class="glass-card p-6 rounded-xl">
                 <img src="https://media-rockstargames-com.akamaized.net/mainsite/img/global/games/fob/640/V.jpg" class="w-full h-48 object-cover rounded-lg mb-6 border border-orange-600/30">
-                <div>
+                <div class="flex-1">
                     <h3 class="text-2xl font-black italic mb-4 uppercase text-[#ff6600]">Starter Pack</h3>
                     <ul class="text-gray-400 mb-8 space-y-3 font-bold text-sm uppercase">
                         <li><i class="fas fa-check text-[#ff6600] mr-2"></i> $20,000,000 Cash</li>
                         <li><i class="fas fa-check text-[#ff6600] mr-2"></i> 6 Autos Exclusivos</li>
-                        <li><i class="fas fa-check text-[#ff6600] mr-2"></i> Estadísticas Max</li>
                     </ul>
                     <div class="text-4xl font-black mb-4 italic">$5.00</div>
-                    <button onclick="addToCart('Starter Pack', 5.00)" class="w-full border border-[#ff6600] text-[#ff6600] hover:bg-[#ff6600] hover:text-black font-black py-2 mb-2 uppercase transition">Añadir al Carrito</button>
                 </div>
+                <paypal-add-to-cart-button data-id="3BJMZA2MSD6QU"></paypal-add-to-cart-button>
+                <script>cartPaypal.AddToCart({ id: "3BJMZA2MSD6QU" })</script>
             </div>
 
-            <div class="glass-card p-6 rounded-xl border-t-4 border-orange-500 scale-105 shadow-[0_0_30px_rgba(255,102,0,0.1)] flex flex-col justify-between">
+            <div class="glass-card p-6 rounded-xl border-t-4 border-orange-500 scale-105 shadow-[0_0_30px_rgba(255,102,0,0.1)]">
                 <img src="https://media-rockstargames-com.akamaized.net/rockstargames-newsite/img/global/news/upload/actual_15638945.jpg" class="w-full h-48 object-cover rounded-lg mb-6 border border-orange-600/50">
-                <div>
+                <div class="flex-1">
                     <h3 class="text-2xl font-black italic mb-4 uppercase text-[#ff6600]">Advanced Pack</h3>
                     <ul class="text-gray-200 mb-8 space-y-3 font-bold text-sm uppercase">
                         <li><i class="fas fa-check text-[#ff6600] mr-2"></i> $40,000,000 Cash</li>
                         <li><i class="fas fa-check text-[#ff6600] mr-2"></i> 10 Autos Premium</li>
-                        <li><i class="fas fa-check text-[#ff6600] mr-2"></i> 100 Niveles Boost</li>
                     </ul>
-                    <div class="text-4xl font-black mb-4 italic">$15.00</div>
-                    <button onclick="addToCart('Advanced Pack', 15.00)" class="w-full border border-[#ff6600] text-[#ff6600] hover:bg-[#ff6600] hover:text-black font-black py-2 mb-2 uppercase transition">Añadir al Carrito</button>
+                    <div class="text-4xl font-black mb-4 italic">$10.00</div>
                 </div>
+                <paypal-add-to-cart-button data-id="F9LL73HYPW2F8"></paypal-add-to-cart-button>
+                <script>cartPaypal.AddToCart({ id: "F9LL73HYPW2F8" })</script>
             </div>
 
-            <div class="glass-card p-6 rounded-xl flex flex-col justify-between">
+            <div class="glass-card p-6 rounded-xl">
                 <img src="https://media-rockstargames-com.akamaized.net/rockstargames-newsite/img/global/news/upload/actual_1625755106.jpg" class="w-full h-48 object-cover rounded-lg mb-6 border border-orange-600/30">
-                <div>
+                <div class="flex-1">
                     <h3 class="text-2xl font-black italic mb-4 uppercase text-[#ff6600]">Premium Pack</h3>
                     <ul class="text-gray-400 mb-8 space-y-3 font-bold text-sm uppercase">
                         <li><i class="fas fa-check text-[#ff6600] mr-2"></i> $60,000,000 Cash</li>
-                        <li><i class="fas fa-check text-[#ff6600] mr-2"></i> 16 Autos de Lujo</li>
-                        <li><i class="fas fa-gift text-[#ff6600] mr-2"></i> Regalo: Todo lo anterior</li>
+                        <li><i class="fas fa-gift text-[#ff6600] mr-2"></i> 16 Autos de Lujo</li>
                     </ul>
                     <div class="text-4xl font-black mb-4 italic">$25.00</div>
-                    <button onclick="addToCart('Premium Pack', 25.00)" class="w-full border border-[#ff6600] text-[#ff6600] hover:bg-[#ff6600] hover:text-black font-black py-2 mb-2 uppercase transition">Añadir al Carrito</button>
                 </div>
+                <paypal-add-to-cart-button data-id="B692SZZ28BSJ8"></paypal-add-to-cart-button>
+                <script>cartPaypal.AddToCart({ id: "B692SZZ28BSJ8" })</script>
             </div>
-        </section>
 
-        <section id="faq" class="tab-content tab-hidden max-w-4xl mx-auto px-6 py-20">
-            <h2 class="text-3xl font-black italic uppercase mb-8 text-[#ff6600] border-b border-orange-900/30 pb-4">Comunidad y Preguntas</h2>
-            <div class="glass-card p-6 rounded-xl mb-10">
-                <h3 class="font-bold uppercase text-sm mb-3">Haz una pregunta pública:</h3>
-                <div class="flex space-x-4">
-                    <input type="text" id="faq-input" placeholder="Inicia sesión para poder preguntar..." class="flex-1 bg-[#0a0a0a] border border-orange-900/50 p-3 rounded text-white focus:border-[#ff6600] outline-none">
-                    <button onclick="submitQuestion()" class="bg-[#ff6600] text-black font-black px-6 uppercase italic hover:scale-105 transition rounded">Publicar</button>
-                </div>
-            </div>
-            <div id="faq-list" class="space-y-6">
-                <div class="text-center text-gray-500 text-sm">Cargando comentarios...</div>
-            </div>
         </section>
-
-        <section id="pagos" class="tab-content tab-hidden max-w-4xl mx-auto px-6 py-20 text-center">
-            <h2 class="text-3xl font-black italic uppercase mb-6 text-[#ff6600]">Medio de Pago Oficial</h2>
-            <div class="glass-card p-8 rounded-xl inline-block w-full md:w-2/3">
-                <i class="fab fa-paypal text-6xl text-blue-500 mb-4"></i>
-                <p class="text-gray-300 font-bold mb-4 text-lg">Actualmente procesamos pagos de forma segura ÚNICAMENTE a través de PayPal.</p>
-                <div class="bg-black/50 p-4 rounded text-left mb-4 border border-orange-900/50">
-                    <h4 class="text-[#ff6600] font-bold mb-2"><i class="fas fa-shield-alt"></i> Compra Segura</h4>
-                    <p class="text-sm text-gray-400">Tus pagos están protegidos. Una vez realizado el pago en el carrito, recibirás un correo electrónico de confirmación de forma automática con las instrucciones para reclamar tu Justice Pack en nuestro servidor de Discord.</p>
-                </div>
-            </div>
-        </section>
-
     </main>
-
-    <footer class="p-10 text-center opacity-40 border-t border-orange-900/10 mt-auto">
-        <p class="text-[10px] uppercase tracking-[1em]">&copy; 2026 GTAV TUNING | JUSTICE SERIES</p>
-    </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyA2F4C7Oy4Kf63OtmNXbcMt2VFlYabw984",
@@ -180,211 +124,34 @@
             projectId: "gtav-tuning",
             storageBucket: "gtav-tuning.firebasestorage.app",
             messagingSenderId: "1041891301932",
-            appId: "1:1041891301932:web:9fcd9ad3c9c67838ab4f89",
-            measurementId: "G-XMJLEN8SEZ"
+            appId: "1:1041891301932:web:9fcd9ad3c9c67838ab4f89"
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        const db = getFirestore(app);
         const provider = new GoogleAuthProvider();
 
         let currentUser = null;
 
-        // --- SISTEMA DE PESTAÑAS ---
-        window.showTab = (tabId) => {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('tab-hidden'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('tab-active'));
-            document.getElementById(tabId).classList.remove('tab-hidden');
-            document.getElementById('btn-' + tabId).classList.add('tab-active');
-        };
-
-        // --- SISTEMA DE AUTENTICACIÓN ---
         window.loginWithGoogle = () => {
             signInWithPopup(auth, provider).then(() => {
                 document.getElementById('login-modal').classList.add('hidden');
             }).catch(err => alert("Error: " + err.message));
         };
-        window.logoutApp = () => { signOut(auth); };
-        window.toggleLogin = () => { if(!currentUser) document.getElementById('login-modal').classList.toggle('hidden'); };
+
+        window.toggleLogin = () => { 
+            if(!currentUser) document.getElementById('login-modal').classList.toggle('hidden'); 
+        };
 
         onAuthStateChanged(auth, (user) => {
             currentUser = user;
             const menuBtn = document.getElementById('user-menu-btn');
-            const dropdown = document.getElementById('user-dropdown');
-            const faqInput = document.getElementById('faq-input');
-
             if (user) {
                 menuBtn.innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full border border-[#ff6600]"> <span class="font-bold text-sm uppercase hidden md:inline text-[#ff6600]">${user.displayName.split(' ')[0]}</span>`;
-                menuBtn.onclick = null; 
-                dropdown.classList.remove('hidden'); 
-                if(faqInput) faqInput.placeholder = "Escribe tu pregunta aquí...";
             } else {
                 menuBtn.innerHTML = `<i class="fas fa-user-circle text-xl"></i> <span class="font-bold text-sm uppercase hidden md:inline">Iniciar Sesión</span>`;
-                menuBtn.onclick = toggleLogin;
-                dropdown.classList.add('hidden');
-                if(faqInput) faqInput.placeholder = "Inicia sesión para poder preguntar...";
             }
         });
-
-        // --- SISTEMA DE BASE DE DATOS (PREGUNTAS) ---
-        window.submitQuestion = async () => {
-            if(!currentUser) return alert("Por favor, inicia sesión con Google para comentar.");
-            const input = document.getElementById('faq-input');
-            const text = input.value.trim();
-            if(!text) return;
-
-            try {
-                await addDoc(collection(db, "faqs"), {
-                    text: text,
-                    author: currentUser.displayName,
-                    photo: currentUser.photoURL,
-                    timestamp: serverTimestamp(),
-                    replies: []
-                });
-                input.value = '';
-            } catch(e) { console.error(e); }
-        };
-
-        window.submitReply = async (docId) => {
-            if(!currentUser) return alert("Inicia sesión para responder.");
-            const input = document.getElementById(`reply-input-${docId}`);
-            const text = input.value.trim();
-            if(!text) return;
-
-            try {
-                const faqRef = doc(db, "faqs", docId);
-                await updateDoc(faqRef, {
-                    replies: arrayUnion({
-                        text: text,
-                        author: currentUser.displayName,
-                        time: new Date().getTime()
-                    })
-                });
-                input.value = '';
-            } catch(e) { console.error(e); }
-        };
-
-        const qQuery = query(collection(db, "faqs"), orderBy("timestamp", "desc"));
-        onSnapshot(qQuery, (snapshot) => {
-            const list = document.getElementById('faq-list');
-            if(!list) return;
-            list.innerHTML = '';
-            
-            if(snapshot.empty) {
-                list.innerHTML = '<div class="text-center text-gray-500">Aún no hay preguntas. ¡Sé el primero!</div>';
-                return;
-            }
-
-            snapshot.forEach((docSnap) => {
-                const data = docSnap.data();
-                const id = docSnap.id;
-                
-                let repliesHtml = '';
-                if(data.replies && data.replies.length > 0) {
-                    data.replies.forEach(r => {
-                        repliesHtml += `
-                        <div class="bg-[#0a0a0a] p-4 rounded border border-white/5 mt-3">
-                            <div class="flex justify-between items-start mb-2">
-                                <span class="text-[#ff6600] font-bold text-xs">${r.author}</span>
-                            </div>
-                            <p class="text-gray-400 text-sm">${r.text}</p>
-                        </div>`;
-                    });
-                }
-
-                list.innerHTML += `
-                <div class="glass-card p-6 rounded-xl">
-                    <div class="flex items-center space-x-3 mb-4">
-                        <img src="${data.photo || 'https://via.placeholder.com/40'}" class="w-8 h-8 rounded-full">
-                        <span class="font-bold text-white">${data.author}</span>
-                    </div>
-                    <div class="text-lg mb-2 text-gray-200">"${data.text}"</div>
-                    
-                    <div class="ml-8 border-l-2 border-orange-900/50 pl-4 mt-4">
-                        ${repliesHtml}
-                        <div class="mt-4 flex space-x-2">
-                            <input type="text" id="reply-input-${id}" placeholder="Responder..." class="flex-1 bg-[#0a0a0a] border border-gray-800 p-2 text-sm rounded text-white focus:border-[#ff6600] outline-none">
-                            <button onclick="submitReply('${id}')" class="bg-gray-800 hover:bg-[#ff6600] hover:text-black text-xs font-bold px-4 transition rounded">Enviar</button>
-                        </div>
-                    </div>
-                </div>`;
-            });
-        });
-
-        // --- SISTEMA DE CARRITO Y PAGO ---
-        let cart = [];
-        let totalCartAmount = 0;
-        
-        window.toggleCart = () => {
-            document.getElementById('cart-sidebar').classList.toggle('translate-x-full');
-            document.getElementById('cart-overlay').classList.toggle('hidden');
-        };
-        
-        window.addToCart = (name, price) => {
-            cart.push({ name, price }); updateCartUI();
-            toggleCart(); setTimeout(toggleCart, 1500);
-        };
-        
-        window.removeFromCart = (index) => { cart.splice(index, 1); updateCartUI(); };
-        
-        function updateCartUI() {
-            const container = document.getElementById('cart-items');
-            document.getElementById('cart-count').innerText = cart.length;
-            if(cart.length === 0) { 
-                container.innerHTML = 'El carrito está vacío.'; 
-                document.getElementById('cart-total').innerText = '$0.00'; 
-                totalCartAmount = 0;
-                return; 
-            }
-            let html = '', total = 0;
-            cart.forEach((item, index) => {
-                total += item.price;
-                html += `<div class="flex justify-between items-center mb-4 border-b border-orange-900/30 pb-2"><div><div class="text-[#ff6600] uppercase">${item.name}</div><div class="text-white">$${item.price.toFixed(2)}</div></div><button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-400"><i class="fas fa-trash"></i></button></div>`;
-            });
-            container.innerHTML = html; 
-            totalCartAmount = total;
-            document.getElementById('cart-total').innerText = '$' + total.toFixed(2);
-        }
-
-        // --- SISTEMA DE EMAILJS (CONFIRMACIÓN DE PAGO) CON TUS CREDENCIALES ---
-        window.procesarPago = () => {
-            if (cart.length === 0) return alert("Tu carrito está vacío.");
-            if (!currentUser) {
-                toggleCart(); // Cierra el carrito
-                toggleLogin(); // Abre el login
-                return alert("Por favor, inicia sesión para poder procesar tu compra y enviarte el recibo.");
-            }
-
-            alert("Procesando tu pedido... Enviando recibo.");
-            
-            // Recopilar los nombres de los packs comprados
-            const itemsComprados = cart.map(item => item.name).join(", ");
-
-            // Parámetros que EmailJS leerá para rellenar la plantilla
-            const templateParams = {
-                nombre_cliente: currentUser.displayName,
-                email_cliente: currentUser.email, // El correo del cliente
-                packs_comprados: itemsComprados,
-                total_pagado: totalCartAmount.toFixed(2) // Pasamos solo el número
-            };
-
-            // Enviar correo usando EmailJS con tus claves reales
-            emailjs.send('service_mrk13w4', 'template_ryfpxum', templateParams)
-                .then(function(response) {
-                   alert('¡Pago confirmado! Se ha enviado el recibo a tu correo. Redirigiendo a Discord...');
-                   cart = []; // Vaciar carrito
-                   updateCartUI();
-                   toggleCart(); // Cerrar sidebar del carrito
-                   
-                   // Redirigir al servidor de Discord de forma automática
-                   window.location.href = "https://discord.gg/DgDJmYm8S4";
-                }, function(error) {
-                   alert('Hubo un error al enviar el correo: ' + error.text);
-                });
-            
-            console.log("Datos enviados por correo:", templateParams);
-        };
     </script>
 </body>
 </html>
