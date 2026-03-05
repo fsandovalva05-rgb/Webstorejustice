@@ -17,37 +17,16 @@
         .glass-card:hover { border-color: #ff6600; box-shadow: 0 0 20px rgba(255, 102, 0, 0.1); }
         .bg-hero { background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.95)), url('https://media-rockstargames-com.akamaized.net/rockstargames-newsite/img/global/games/fob/640/gtao_drugwars.jpg'); background-size: cover; background-position: center; }
         
-        /* SISTEMA DE PESTAÑAS */
+        /* SISTEMA DE PESTAÑAS (Ahora en el Dropdown) */
         .tab-content { display: none; }
         .tab-content.active { display: grid; }
         .tab-content#faq.active, .tab-content#pagos.active { display: block; }
-        .tab-btn { position: relative; cursor: pointer; white-space: nowrap; }
-        .tab-btn.active { color: #ff6600; }
-        .tab-btn.active::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 100%; height: 2px; background: #ff6600; box-shadow: 0 0 10px #ff6600; }
+        .tab-btn.active { color: #ff6600; border-left: 4px solid #ff6600; background: rgba(255,102,0,0.1); }
+        .tab-btn:hover.active { color: #000; background: #ff6600; }
 
-        /* NAVEGACIÓN Y PREVENCIÓN DE SOLAPAMIENTO */
-        .nav-container { display: flex; justify-content: space-between; align-items: center; max-width: 80rem; margin: 0 auto; width: 100%; }
-        .nav-actions { display: flex; align-items: center; gap: 15px; } /* Ajustado para móvil */
-        
-        @media (min-width: 768px) {
-            .nav-actions { gap: 30px; }
-        }
-
-        .user-menu-container { position: relative; }
-        .dropdown-menu { 
-            display: none; 
-            position: absolute; 
-            right: 0; 
-            top: 130%; 
-            background: #050505; 
-            border: 1px solid #ff6600; 
-            min-width: 140px; 
-            z-index: 9999; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.9);
-        }
-        .user-menu-container:hover .dropdown-menu { display: block; }
-        .dropdown-item { padding: 12px; font-size: 10px; font-weight: bold; text-transform: uppercase; cursor: pointer; transition: 0.2s; color: #ff6600; text-align: center; }
-        .dropdown-item:hover { background: #ff6600; color: #000; }
+        /* USER MENU DROPDOWN */
+        .user-dropdown-menu { display: none; position: absolute; right: 0; top: 120%; background: #050505; border: 1px solid #ff6600; border-radius: 6px; min-width: 140px; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.9); overflow: hidden; }
+        .user-dropdown-menu.show { display: block; }
 
         .discord-float { position: fixed; bottom: 20px; right: 20px; background: #5865F2; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 25px; z-index: 100; border: 2px solid white; }
     </style>
@@ -67,39 +46,41 @@
 
     <a href="https://discord.gg/DgDJmYm8S4" target="_blank" class="discord-float hover:scale-110 transition"><i class="fab fa-discord text-white"></i></a>
 
-    <nav class="p-4 bg-black/90 backdrop-blur-md border-b border-orange-900/30 sticky top-0 z-[5000]">
-        <div class="nav-container">
-            <h1 class="text-xl md:text-2xl font-black italic uppercase tracking-tighter cursor-pointer shrink-0" onclick="location.reload()">
-                GTAV<span class="text-[#ff6600] orange-glow">TUNING</span>
-            </h1>
+    <nav class="p-4 bg-[#050505] border-b border-orange-900/30 sticky top-0 z-[5000]">
+        <div class="max-w-7xl mx-auto flex justify-between items-center relative">
             
-            <div class="hidden lg:flex space-x-8 font-bold uppercase text-[10px] tracking-widest">
-                <button onclick="changeTab('packs')" id="btn-packs" class="tab-btn active transition">Justice Packs</button>
-                <button onclick="changeTab('faq')" id="btn-faq" class="tab-btn transition">FAQ</button>
-                <button onclick="changeTab('pagos')" id="btn-pagos" class="tab-btn transition">Pagos</button>
+            <div class="relative">
+                <div class="flex items-center cursor-pointer group" onclick="toggleMainMenu()">
+                    <h1 class="text-xl md:text-2xl font-black italic uppercase tracking-tighter">
+                        GTAV<span class="text-[#ff6600] orange-glow">TUNING</span>
+                    </h1>
+                    <i class="fas fa-bars text-[#ff6600] ml-3 text-lg md:text-xl transition-transform group-hover:scale-110"></i>
+                </div>
+                
+                <div id="main-menu-dropdown" class="hidden absolute left-0 top-full mt-4 bg-[#0a0a0a] border border-[#ff6600] rounded-lg min-w-[200px] z-[6000] shadow-2xl overflow-hidden">
+                    <button onclick="changeTab('packs')" id="btn-packs" class="w-full text-left px-5 py-4 text-xs font-bold uppercase text-white hover:bg-[#ff6600] hover:text-black transition border-b border-orange-900/30 tab-btn active">Justice Packs</button>
+                    <button onclick="changeTab('faq')" id="btn-faq" class="w-full text-left px-5 py-4 text-xs font-bold uppercase text-white hover:bg-[#ff6600] hover:text-black transition border-b border-orange-900/30 tab-btn">Comunidad / FAQ</button>
+                    <button onclick="changeTab('pagos')" id="btn-pagos" class="w-full text-left px-5 py-4 text-xs font-bold uppercase text-white hover:bg-[#ff6600] hover:text-black transition tab-btn">Medios de Pago</button>
+                </div>
             </div>
 
-            <div class="nav-actions">
-                <div class="user-menu-container">
-                    <div id="user-display" class="flex items-center gap-2 cursor-pointer" onclick="toggleLoginModal()">
-                        <i class="fas fa-user-circle text-xl md:text-2xl"></i>
+            <div class="flex items-center gap-4 md:gap-6">
+                
+                <div class="relative">
+                    <div id="user-display" class="flex items-center gap-2 cursor-pointer hover:opacity-80 transition" onclick="toggleUserMenu()">
+                        <i class="fas fa-user-circle text-2xl md:text-3xl text-white"></i>
                         <span class="text-[10px] font-black uppercase hidden sm:inline">Entrar</span>
                     </div>
-                    <div id="user-dropdown" class="dropdown-menu">
+                    <div id="user-dropdown" class="user-dropdown-menu">
                         </div>
                 </div>
 
-                <div class="paypal-wrapper shrink-0">
+                <div class="paypal-wrapper shrink-0 border-l border-orange-900/30 pl-4 md:pl-6">
                     <paypal-cart-button data-id="pp-view-cart"></paypal-cart-button>
                     <script>cartPaypal.Cart({ id: "pp-view-cart" })</script>
                 </div>
+
             </div>
-        </div>
-        
-        <div class="flex lg:hidden justify-center space-x-6 mt-4 font-bold uppercase text-[9px] tracking-tighter border-t border-orange-900/10 pt-3">
-            <button onclick="changeTab('packs')" id="btn-packs-m" class="tab-btn active transition">Packs</button>
-            <button onclick="changeTab('faq')" id="btn-faq-m" class="tab-btn transition">FAQ</button>
-            <button onclick="changeTab('pagos')" id="btn-pagos-m" class="tab-btn transition">Pagos</button>
         </div>
     </nav>
 
@@ -108,7 +89,7 @@
         <p class="text-gray-400 text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase">Premium Modding Service</p>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 md:px-6 py-10">
+    <main class="max-w-7xl mx-auto px-4 md:px-6 py-10 min-h-[50vh]">
         
         <div id="packs" class="tab-content active grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             <div class="glass-card p-6 md:p-8 rounded-xl border-b-4 border-orange-900/40">
@@ -186,34 +167,62 @@
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
+        let isUserLoggedIn = false;
+
+        // Mostrar / Ocultar Menú Principal (Secciones)
+        window.toggleMainMenu = () => {
+            const menu = document.getElementById('main-menu-dropdown');
+            menu.classList.toggle('hidden');
+            // Cierra el menú de usuario si está abierto
+            document.getElementById('user-dropdown').classList.remove('show');
+        };
+
+        // Cambiar de Pestaña
         window.changeTab = (id) => {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(id).classList.add('active');
+            document.getElementById('btn-' + id).classList.add('active');
             
-            // Activa tanto el botón de escritorio como el de móvil
-            const btnId = id.includes('-m') ? id.replace('-m', '') : id;
-            if(document.getElementById('btn-' + btnId)) document.getElementById('btn-' + btnId).classList.add('active');
-            if(document.getElementById('btn-' + btnId + '-m')) document.getElementById('btn-' + btnId + '-m').classList.add('active');
+            // Ocultar el menú al hacer clic en una opción
+            document.getElementById('main-menu-dropdown').classList.add('hidden');
         };
 
+        // Lógica Modal Login
         window.toggleLoginModal = () => document.getElementById('login-modal').classList.toggle('hidden');
+        
         document.getElementById('google-login-btn').onclick = () => {
             signInWithPopup(auth, provider).then(() => toggleLoginModal()).catch(() => alert("Error al conectar con Google"));
         };
+        
         window.logout = () => signOut(auth).then(() => location.reload());
+
+        // Manejar el clic del Usuario (Abre Modal o Menú Desplegable)
+        window.toggleUserMenu = () => {
+            if (!isUserLoggedIn) {
+                toggleLoginModal();
+            } else {
+                const dropdown = document.getElementById('user-dropdown');
+                dropdown.classList.toggle('show');
+                // Cierra el menú principal si está abierto
+                document.getElementById('main-menu-dropdown').classList.add('hidden');
+            }
+        };
 
         onAuthStateChanged(auth, (user) => {
             const display = document.getElementById('user-display');
             const dropdown = document.getElementById('user-dropdown');
+            
             if (user) {
-                display.innerHTML = `<img src="${user.photoURL}" class="w-6 h-6 md:w-8 md:h-8 rounded-full border border-[#ff6600]"> <span class="text-[#ff6600] font-black uppercase text-[9px] hidden sm:inline ml-1">${user.displayName.split(' ')[0]}</span>`;
-                display.onclick = null;
-                dropdown.innerHTML = `<div class="dropdown-item" onclick="logout()"><i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión</div>`;
+                isUserLoggedIn = true;
+                display.innerHTML = `<img src="${user.photoURL}" class="w-7 h-7 md:w-8 md:h-8 rounded-full border border-[#ff6600]"> <span class="text-[#ff6600] font-black uppercase text-[10px] hidden sm:inline ml-1">${user.displayName.split(' ')[0]}</span> <i class="fas fa-chevron-down text-[10px] text-gray-500 ml-1"></i>`;
+                
+                dropdown.innerHTML = `<div class="p-3 text-center text-[10px] font-bold uppercase text-[#ff6600] hover:bg-[#ff6600] hover:text-black cursor-pointer transition" onclick="logout()"><i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión</div>`;
             } else {
-                display.innerHTML = `<i class="fas fa-user-circle text-xl md:text-2xl"></i> <span class="text-[9px] font-black uppercase hidden sm:inline ml-1">Entrar</span>`;
-                display.onclick = toggleLoginModal;
+                isUserLoggedIn = false;
+                display.innerHTML = `<i class="fas fa-user-circle text-2xl md:text-3xl"></i> <span class="text-[10px] font-black uppercase hidden sm:inline ml-1">Entrar</span>`;
                 dropdown.innerHTML = "";
+                dropdown.classList.remove('show');
             }
         });
     </script>
