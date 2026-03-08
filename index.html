@@ -4,52 +4,60 @@
 <head>
 <meta charset="UTF-8">
 <title>GTAVTUNING - Justice Packs</title>
-
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- PAYPAL -->
 <script src="https://www.paypalobjects.com/ncp/cart/cart.js" data-merchant-id="9XJYURW442CAG"></script>
 
-<!-- FUENTE -->
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
 
 <style>
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Orbitron',sans-serif;
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Orbitron',sans-serif;}
+
+body{background:#070707;color:white;overflow-x:hidden;}
+
+body::before{
+content:"";
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:
+radial-gradient(circle at 20% 20%, rgba(255,120,0,0.3), transparent 40%),
+radial-gradient(circle at 80% 60%, rgba(255,120,0,0.2), transparent 40%),
+radial-gradient(circle at 50% 90%, rgba(255,120,0,0.2), transparent 40%);
+animation:moveLights 10s infinite alternate;
+z-index:-1;
 }
 
-body{
-background:#0c0c0c;
-color:white;
-overflow-x:hidden;
+@keyframes moveLights{
+0%{transform:translateY(0px)}
+100%{transform:translateY(-80px)}
 }
-
-/* NAVBAR */
 
 nav{
+position:fixed;
+top:0;
+width:100%;
 background:#111;
-padding:20px;
+padding:15px 40px;
 display:flex;
-flex-direction:column;
+justify-content:space-between;
 align-items:center;
 border-bottom:2px solid #ff7b00;
+z-index:999;
 }
 
 .logo{
-font-size:26px;
+font-size:22px;
 color:#ff7b00;
-font-weight:bold;
-letter-spacing:3px;
-margin-bottom:10px;
+font-weight:800;
+letter-spacing:2px;
 }
 
 .menu{
 display:flex;
-justify-content:center;
 gap:30px;
 }
 
@@ -63,104 +71,118 @@ transition:0.3s;
 color:#ff7b00;
 }
 
-/* HERO */
-
 .hero{
-height:60vh;
+margin-top:90px;
+height:50vh;
 display:flex;
 justify-content:center;
 align-items:center;
+flex-direction:column;
 text-align:center;
-background:linear-gradient(black, #111);
 }
 
 .hero h1{
-font-size:50px;
+font-size:48px;
 color:#ff7b00;
 text-shadow:0 0 20px #ff7b00;
-animation:fadeIn 2s ease;
 }
 
-@keyframes fadeIn{
-from{
-opacity:0;
-transform:translateY(50px);
-}
-to{
-opacity:1;
-transform:translateY(0);
-}
+.section{
+display:none;
+padding:70px 10%;
 }
 
-/* PRODUCTOS */
+.active{
+display:block;
+}
 
 .store{
-padding:80px 10%;
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
 gap:40px;
 }
 
 .card{
-
 background:#111;
 padding:30px;
-border-radius:10px;
+border-radius:12px;
+border:1px solid #222;
 text-align:center;
 transition:0.4s;
-border:1px solid #222;
-position:relative;
-overflow:hidden;
-
 }
 
 .card:hover{
-
 transform:translateY(-10px) scale(1.03);
-box-shadow:0 0 30px #ff7b00;
-
+box-shadow:0 0 35px #ff7b00;
 }
 
-.card h2{
-color:#ff7b00;
+.card img{
+width:80px;
 margin-bottom:10px;
 }
 
 .price{
-font-size:28px;
-margin:20px 0;
+font-size:26px;
+margin:15px 0;
+color:#ff7b00;
 }
-
-.features{
-font-size:14px;
-opacity:0.8;
-margin-bottom:20px;
-}
-
-/* CARRITO */
 
 .cart-floating{
-
 position:fixed;
 top:20px;
 right:20px;
 background:#ff7b00;
-padding:10px 20px;
+padding:8px 16px;
 border-radius:30px;
 box-shadow:0 0 20px #ff7b00;
-z-index:999;
-
+z-index:1000;
 }
 
-/* FOOTER */
-
-footer{
-margin-top:80px;
-padding:40px;
+.faq-item{
 background:#111;
+padding:20px;
+margin-bottom:20px;
+border-radius:8px;
+}
+
+.vote button{
+background:none;
+border:none;
+color:#ff7b00;
+font-size:18px;
+cursor:pointer;
+margin-right:10px;
+}
+
+textarea{
+width:100%;
+padding:10px;
+background:#111;
+border:1px solid #333;
+color:white;
+margin-top:20px;
+}
+
+button{
+margin-top:10px;
+background:#ff7b00;
+border:none;
+padding:10px 20px;
+cursor:pointer;
+}
+
+.payment{
+background:#111;
+padding:30px;
+border-radius:10px;
+max-width:600px;
+margin:auto;
 text-align:center;
-font-size:14px;
-opacity:0.7;
+}
+
+#userBox input{
+padding:5px;
+margin:3px;
 }
 
 </style>
@@ -168,61 +190,45 @@ opacity:0.7;
 
 <body>
 
-<!-- NAV -->
-
 <nav>
 
-<div class="logo">
-GTAVTUNING
-</div>
+<div class="logo">GTAVTUNING</div>
 
 <div class="menu">
-<a href="#">Inicio</a>
-<a href="#">Packs</a>
-<a href="#">Discord</a>
+<a href="#" onclick="showSection('packs')">Justice Packs</a>
+<a href="#" onclick="showSection('faq')">Comunidad & FAQ</a>
+<a href="#" onclick="showSection('payments')">Medios de pago</a>
 </div>
+
+<div id="userBox"></div>
 
 </nav>
 
-<!-- CARRITO -->
-
 <div class="cart-floating">
-
 <paypal-cart-button data-id="pp-view-cart"></paypal-cart-button>
-
 <script>
 cartPaypal.Cart({ id: "pp-view-cart" })
 </script>
-
 </div>
 
-<!-- HERO -->
-
-<section class="hero">
-
+<div class="hero">
 <h1>Justice Packs</h1>
+<p>Mods de policía y tuning estilo GTA V</p>
+</div>
 
-</section>
+<section id="packs" class="section active">
 
-<!-- TIENDA -->
-
-<section class="store">
-
-<!-- STARTER -->
+<div class="store">
 
 <div class="card">
 
+<img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png">
+
 <h2>Starter Pack</h2>
 
-<div class="price">
-$5
-</div>
+<div class="price">$5</div>
 
-<div class="features">
-✔ Mods básicos<br>
-✔ Vehículos<br>
-✔ Scripts básicos
-</div>
+<p>Mods básicos de policía</p>
 
 <paypal-add-to-cart-button data-id="3BJMZA2MSD6QU"></paypal-add-to-cart-button>
 
@@ -232,22 +238,15 @@ cartPaypal.AddToCart({ id: "3BJMZA2MSD6QU" })
 
 </div>
 
-
-<!-- ADVANCED -->
-
 <div class="card">
+
+<img src="https://cdn-icons-png.flaticon.com/512/1048/1048941.png">
 
 <h2>Advanced Pack</h2>
 
-<div class="price">
-$10
-</div>
+<div class="price">$10</div>
 
-<div class="features">
-✔ Todo lo del Starter<br>
-✔ Scripts avanzados<br>
-✔ Mapas extra
-</div>
+<p>Vehículos + scripts avanzados</p>
 
 <paypal-add-to-cart-button data-id="F9LL73HYPW2F8"></paypal-add-to-cart-button>
 
@@ -257,22 +256,15 @@ cartPaypal.AddToCart({ id: "F9LL73HYPW2F8" })
 
 </div>
 
-
-<!-- PREMIUM -->
-
 <div class="card">
+
+<img src="https://cdn-icons-png.flaticon.com/512/2554/2554973.png">
 
 <h2>Premium Pack</h2>
 
-<div class="price">
-$25
-</div>
+<div class="price">$25</div>
 
-<div class="features">
-✔ Todo incluido<br>
-✔ Mods exclusivos<br>
-✔ Actualizaciones gratis
-</div>
+<p>Todo incluido + mods exclusivos</p>
 
 <paypal-add-to-cart-button data-id="B692SZZ28BSJ8"></paypal-add-to-cart-button>
 
@@ -282,13 +274,212 @@ cartPaypal.AddToCart({ id: "B692SZZ28BSJ8" })
 
 </div>
 
+</div>
+
 </section>
 
-<footer>
+<section id="faq" class="section">
 
-© 2026 GTAVTUNING - Justice Packs
+<h2>Comunidad & FAQ</h2>
 
-</footer>
+<div id="faqContainer"></div>
+
+<textarea id="questionText" placeholder="Haz una pregunta"></textarea>
+
+<button onclick="sendQuestion()">Enviar</button>
+
+</section>
+
+<section id="payments" class="section">
+
+<div class="payment">
+
+<h2>Medios de pago</h2>
+
+<p>Aceptamos pagos seguros mediante:</p>
+
+<br>
+
+<b>💳 Tarjetas de crédito y débito</b><br>
+<b>🅿️ PayPal</b>
+
+<br><br>
+
+<p>Todos los pagos son procesados de forma segura por PayPal.</p>
+
+</div>
+
+</section>
+
+<script>
+
+function showSection(id){
+
+document.querySelectorAll(".section").forEach(s=>{
+s.classList.remove("active")
+})
+
+document.getElementById(id).classList.add("active")
+
+}
+
+</script>
+
+
+<!-- FIREBASE -->
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-analytics.js";
+
+import { 
+getAuth,
+createUserWithEmailAndPassword,
+signInWithEmailAndPassword,
+signOut,
+onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+import {
+getFirestore,
+collection,
+addDoc,
+getDocs,
+updateDoc,
+doc,
+increment
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+
+const firebaseConfig = {
+apiKey: "AIzaSyA2F4C7Oy4Kf63OtmNXbcMt2VFlYabw984",
+authDomain: "gtav-tuning.firebaseapp.com",
+projectId: "gtav-tuning",
+storageBucket: "gtav-tuning.firebasestorage.app",
+messagingSenderId: "1041891301932",
+appId: "1:1041891301932:web:9fcd9ad3c9c67838ab4f89",
+measurementId: "G-XMJLEN8SEZ"
+};
+
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+const auth = getAuth();
+const db = getFirestore();
+
+window.loginUser = async function(){
+
+const email=document.getElementById("loginEmail").value
+const pass=document.getElementById("loginPassword").value
+
+try{
+await signInWithEmailAndPassword(auth,email,pass)
+}catch(err){
+alert(err.message)
+}
+
+}
+
+window.registerUser = async function(){
+
+const email=document.getElementById("loginEmail").value
+const pass=document.getElementById("loginPassword").value
+
+try{
+await createUserWithEmailAndPassword(auth,email,pass)
+}catch(err){
+alert(err.message)
+}
+
+}
+
+window.logoutUser = async function(){
+await signOut(auth)
+}
+
+onAuthStateChanged(auth,(user)=>{
+
+const box=document.getElementById("userBox")
+
+if(user){
+
+box.innerHTML=`👤 ${user.email} <button onclick="logoutUser()">Cerrar sesión</button>`
+
+}else{
+
+box.innerHTML=`
+<input id="loginEmail" placeholder="Email">
+<input id="loginPassword" type="password" placeholder="Password">
+<button onclick="loginUser()">Login</button>
+<button onclick="registerUser()">Register</button>
+`
+
+}
+
+})
+
+window.sendQuestion = async function(){
+
+const text=document.getElementById("questionText").value
+
+await addDoc(collection(db,"questions"),{
+text:text,
+likes:0,
+dislikes:0
+})
+
+loadQuestions()
+
+}
+
+window.loadQuestions = async function(){
+
+const container=document.getElementById("faqContainer")
+
+container.innerHTML=""
+
+const querySnapshot=await getDocs(collection(db,"questions"))
+
+querySnapshot.forEach((docData)=>{
+
+const data=docData.data()
+
+const div=document.createElement("div")
+
+div.className="faq-item"
+
+div.innerHTML=`
+<p>${data.text}</p>
+
+👍 ${data.likes}
+<button onclick="vote('${docData.id}','likes')">👍</button>
+
+👎 ${data.dislikes}
+<button onclick="vote('${docData.id}','dislikes')">👎</button>
+`
+
+container.appendChild(div)
+
+})
+
+}
+
+window.vote = async function(id,type){
+
+const ref=doc(db,"questions",id)
+
+await updateDoc(ref,{
+[type]:increment(1)
+})
+
+loadQuestions()
+
+}
+
+loadQuestions()
+
+</script>
 
 </body>
 </html>
