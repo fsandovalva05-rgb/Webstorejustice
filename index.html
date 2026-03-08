@@ -226,7 +226,7 @@ cartPaypal.Cart({ id: "pp-view-cart" })
 
 <div class="hero">
 <h1>Justice Packs</h1>
-<p>Mods de policía y tuning estilo GTA V</p>
+<p>ROCKEA LA CIUDAD DE LS CON LO MEJOR</p>
 </div>
 
 <section id="packs" class="section active">
@@ -253,7 +253,7 @@ cartPaypal.Cart({ id: "pp-view-cart" })
 <div class="card">
 <img src="https://cdn-icons-png.flaticon.com/512/2554/2554973.png">
 <h2>Premium Pack</h2>
-<div class="price">$25</div>
+<div class="price">$20</div>
 <p>Todo incluido + mods exclusivos</p>
 <paypal-add-to-cart-button data-id="B692SZZ28BSJ8"></paypal-add-to-cart-button>
 <script>cartPaypal.AddToCart({ id:"B692SZZ28BSJ8"})</script>
@@ -309,28 +309,86 @@ const auth=getAuth()
 const db=getFirestore()
 const provider=new GoogleAuthProvider()
 
+let currentUser=null
+
 window.googleLogin=()=>signInWithPopup(auth,provider)
 window.logoutUser=()=>signOut(auth)
 
 onAuthStateChanged(auth,(user)=>{
+
+currentUser=user
+
 const box=document.getElementById("userBox")
+
 if(user){
-box.innerHTML=`<img src="${user.photoURL}"> ${user.displayName} <button onclick="logoutUser()">Cerrar</button>`
+
+box.innerHTML=`
+<img src="${user.photoURL}">
+${user.displayName}
+<button onclick="logoutUser()">Cerrar</button>
+`
+
 }else{
-box.innerHTML=`<button onclick="googleLogin()">Login Google</button>`
+
+box.innerHTML=`
+<button onclick="googleLogin()">Login Google</button>
+`
+
 }
+
 })
 
 window.sendQuestion=async function(){
+
+if(!currentUser){
+alert("Debes iniciar sesión con Google para hacer una pregunta")
+return
+}
+
 const text=document.getElementById("questionText").value
-await addDoc(collection(db,"questions"),{text,likes:0,dislikes:0})
+
+if(text.trim()==""){
+alert("Escribe una pregunta")
+return
+}
+
+await addDoc(collection(db,"questions"),{
+text,
+user:currentUser.displayName,
+likes:0,
+dislikes:0
+})
+
+document.getElementById("questionText").value=""
+
 loadQuestions()
+
 }
 
 window.sendAnswer=async function(qid){
+
+if(!currentUser){
+alert("Debes iniciar sesión con Google para responder")
+return
+}
+
 const text=document.getElementById("answer-"+qid).value
-await addDoc(collection(db,"answers"),{qid,text,likes:0,dislikes:0})
+
+if(text.trim()==""){
+alert("Escribe una respuesta")
+return
+}
+
+await addDoc(collection(db,"answers"),{
+qid,
+text,
+user:currentUser.displayName,
+likes:0,
+dislikes:0
+})
+
 loadQuestions()
+
 }
 
 async function loadAnswers(qid,container){
@@ -346,9 +404,12 @@ const div=document.createElement("div")
 div.className="answer"
 
 div.innerHTML=`
+<b>${data.user}</b><br>
 ${data.text}<br>
+
 👍 ${data.likes}
 <button onclick="voteAnswer('${d.id}','likes')">👍</button>
+
 👎 ${data.dislikes}
 <button onclick="voteAnswer('${d.id}','dislikes')">👎</button>
 `
@@ -374,10 +435,12 @@ const div=document.createElement("div")
 div.className="faq-item"
 
 div.innerHTML=`
+<b>${data.user}</b><br>
 <p>${data.text}</p>
 
 👍 ${data.likes}
 <button onclick="vote('${docData.id}','likes')">👍</button>
+
 👎 ${data.dislikes}
 <button onclick="vote('${docData.id}','dislikes')">👎</button>
 
