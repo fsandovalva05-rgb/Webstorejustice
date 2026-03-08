@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -180,9 +179,11 @@ margin:auto;
 text-align:center;
 }
 
-#userBox input{
-padding:5px;
-margin:3px;
+#userBox img{
+width:28px;
+border-radius:50%;
+margin-right:8px;
+vertical-align:middle;
 }
 
 </style>
@@ -221,61 +222,42 @@ cartPaypal.Cart({ id: "pp-view-cart" })
 <div class="store">
 
 <div class="card">
-
 <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png">
-
 <h2>Starter Pack</h2>
-
 <div class="price">$5</div>
-
 <p>Mods básicos de policía</p>
 
 <paypal-add-to-cart-button data-id="3BJMZA2MSD6QU"></paypal-add-to-cart-button>
-
 <script>
 cartPaypal.AddToCart({ id: "3BJMZA2MSD6QU" })
 </script>
-
 </div>
 
 <div class="card">
-
 <img src="https://cdn-icons-png.flaticon.com/512/1048/1048941.png">
-
 <h2>Advanced Pack</h2>
-
 <div class="price">$10</div>
-
 <p>Vehículos + scripts avanzados</p>
 
 <paypal-add-to-cart-button data-id="F9LL73HYPW2F8"></paypal-add-to-cart-button>
-
 <script>
 cartPaypal.AddToCart({ id: "F9LL73HYPW2F8" })
 </script>
-
 </div>
 
 <div class="card">
-
 <img src="https://cdn-icons-png.flaticon.com/512/2554/2554973.png">
-
 <h2>Premium Pack</h2>
-
 <div class="price">$25</div>
-
 <p>Todo incluido + mods exclusivos</p>
 
 <paypal-add-to-cart-button data-id="B692SZZ28BSJ8"></paypal-add-to-cart-button>
-
 <script>
 cartPaypal.AddToCart({ id: "B692SZZ28BSJ8" })
 </script>
-
 </div>
 
 </div>
-
 </section>
 
 <section id="faq" class="section">
@@ -285,7 +267,6 @@ cartPaypal.AddToCart({ id: "B692SZZ28BSJ8" })
 <div id="faqContainer"></div>
 
 <textarea id="questionText" placeholder="Haz una pregunta"></textarea>
-
 <button onclick="sendQuestion()">Enviar</button>
 
 </section>
@@ -293,7 +274,6 @@ cartPaypal.AddToCart({ id: "B692SZZ28BSJ8" })
 <section id="payments" class="section">
 
 <div class="payment">
-
 <h2>Medios de pago</h2>
 
 <p>Aceptamos pagos seguros mediante:</p>
@@ -325,7 +305,6 @@ document.getElementById(id).classList.add("active")
 
 </script>
 
-
 <!-- FIREBASE -->
 
 <script type="module">
@@ -335,8 +314,8 @@ import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.10.0/firebas
 
 import { 
 getAuth,
-createUserWithEmailAndPassword,
-signInWithEmailAndPassword,
+GoogleAuthProvider,
+signInWithPopup,
 signOut,
 onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
@@ -351,7 +330,6 @@ doc,
 increment
 } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-
 const firebaseConfig = {
 apiKey: "AIzaSyA2F4C7Oy4Kf63OtmNXbcMt2VFlYabw984",
 authDomain: "gtav-tuning.firebaseapp.com",
@@ -363,31 +341,17 @@ measurementId: "G-XMJLEN8SEZ"
 };
 
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+getAnalytics(app);
 
 const auth = getAuth();
 const db = getFirestore();
 
-window.loginUser = async function(){
+const provider = new GoogleAuthProvider();
 
-const email=document.getElementById("loginEmail").value
-const pass=document.getElementById("loginPassword").value
-
-try{
-await signInWithEmailAndPassword(auth,email,pass)
-}catch(err){
-alert(err.message)
-}
-
-}
-
-window.registerUser = async function(){
-
-const email=document.getElementById("loginEmail").value
-const pass=document.getElementById("loginPassword").value
+window.googleLogin = async function(){
 
 try{
-await createUserWithEmailAndPassword(auth,email,pass)
+await signInWithPopup(auth,provider)
 }catch(err){
 alert(err.message)
 }
@@ -404,15 +368,16 @@ const box=document.getElementById("userBox")
 
 if(user){
 
-box.innerHTML=`👤 ${user.email} <button onclick="logoutUser()">Cerrar sesión</button>`
+box.innerHTML=`
+<img src="${user.photoURL}">
+${user.displayName}
+<button onclick="logoutUser()">Cerrar sesión</button>
+`
 
 }else{
 
 box.innerHTML=`
-<input id="loginEmail" placeholder="Email">
-<input id="loginPassword" type="password" placeholder="Password">
-<button onclick="loginUser()">Login</button>
-<button onclick="registerUser()">Register</button>
+<button onclick="googleLogin()">Iniciar sesión con Google</button>
 `
 
 }
@@ -483,4 +448,3 @@ loadQuestions()
 
 </body>
 </html>
-```
