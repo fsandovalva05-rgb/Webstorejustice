@@ -115,11 +115,6 @@ transform:translateY(-10px) scale(1.03);
 box-shadow:0 0 35px #ff7b00;
 }
 
-.card img{
-width:80px;
-margin-bottom:10px;
-}
-
 .price{
 font-size:26px;
 margin:15px 0;
@@ -135,6 +130,18 @@ padding:8px 16px;
 border-radius:30px;
 box-shadow:0 0 20px #ff7b00;
 z-index:1000;
+}
+
+#userBox{
+margin-right:120px;
+display:flex;
+align-items:center;
+gap:8px;
+}
+
+#userBox img{
+width:28px;
+border-radius:50%;
 }
 
 .faq-item{
@@ -177,32 +184,18 @@ margin:auto;
 text-align:center;
 }
 
-#userBox{
-margin-right:90px;
-display:flex;
-align-items:center;
-gap:8px;
-}
-
-#userBox img{
-width:28px;
-border-radius:50%;
-margin-right:8px;
-vertical-align:middle;
-}
-
 .discord-button{
 position:fixed;
 bottom:20px;
 right:20px;
 background:#5865F2;
-width:55px;
-height:55px;
+width:60px;
+height:60px;
 display:flex;
 align-items:center;
 justify-content:center;
 border-radius:50%;
-box-shadow:0 0 20px #5865F2;
+box-shadow:0 0 25px #5865F2;
 cursor:pointer;
 z-index:999;
 transition:0.3s;
@@ -210,7 +203,10 @@ transition:0.3s;
 
 .discord-button:hover{
 transform:scale(1.1);
-box-shadow:0 0 30px #5865F2;
+}
+
+.discord-button img{
+width:32px;
 }
 
 </style>
@@ -245,14 +241,12 @@ cartPaypal.Cart({ id: "pp-view-cart" })
 </div>
 
 <section id="packs" class="section active">
+
 <div class="store">
 
 <div class="card">
-<img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png">
 <h2>Starter Pack</h2>
-
 <div class="price">$5</div>
-
 <p>
 💰 $20,000,000 Cash<br>
 🚗 6 Autos Exclusivos
@@ -260,19 +254,11 @@ cartPaypal.Cart({ id: "pp-view-cart" })
 
 <paypal-add-to-cart-button data-id="3BJMZA2MSD6QU"></paypal-add-to-cart-button>
 <script>cartPaypal.AddToCart({ id:"3BJMZA2MSD6QU"})</script>
-
 </div>
 
-
-
 <div class="card">
-
-<img src="https://cdn-icons-png.flaticon.com/512/1048/1048941.png">
-
 <h2>Advanced Pack</h2>
-
 <div class="price">$10</div>
-
 <p>
 💰 $40,000,000 Cash<br>
 🚗 10 Autos Premium
@@ -280,30 +266,20 @@ cartPaypal.Cart({ id: "pp-view-cart" })
 
 <paypal-add-to-cart-button data-id="F9LL73HYPW2F8"></paypal-add-to-cart-button>
 <script>cartPaypal.AddToCart({ id:"F9LL73HYPW2F8"})</script>
-
 </div>
 
-
-
 <div class="card">
-
-<img src="https://cdn-icons-png.flaticon.com/512/2554/2554973.png">
-
 <h2>Premium Pack ⭐</h2>
-
 <div class="price">$20</div>
-
 <p>
 💰 $60,000,000 Cash<br>
 🚗 16 Autos de Lujo<br><br>
-
 ⭐ Bonus:<br>
 Incluye todo lo anterior
 </p>
 
 <paypal-add-to-cart-button data-id="B692SZZ28BSJ8"></paypal-add-to-cart-button>
 <script>cartPaypal.AddToCart({ id:"B692SZZ28BSJ8"})</script>
-
 </div>
 
 </div>
@@ -329,8 +305,8 @@ Incluye todo lo anterior
 <b>🅿️ PayPal</b><br><br>
 
 <p>
-Todos los pagos serán procesados de forma segura a través de la plataforma oficial de PayPal.<br>
-GTAVTUNING no almacena información bancaria ni datos de tarjetas de los usuarios.
+Todos los pagos serán procesados de forma segura a través de la web oficial de PayPal.<br>
+GTAVTUNING no almacena información bancaria ni datos de tarjetas.
 </p>
 
 </div>
@@ -338,7 +314,7 @@ GTAVTUNING no almacena información bancaria ni datos de tarjetas de los usuario
 
 <div class="discord-button" onclick="window.open('https://discord.gg/aaQUBXqchE')">
 
-<img src="https://static.vecteezy.com/system/resources/previews/023/986/667/non_2x/discord-logo-discord-logo-transparent-discord-icon-transparent-free-free-png.png" width="28">
+<img src="https://i.pinimg.com/736x/13/af/38/13af386d6c652038bdcd0aa2613e72a5.jpg">
 
 </div>
 
@@ -347,186 +323,6 @@ function showSection(id){
 document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"))
 document.getElementById(id).classList.add("active")
 }
-</script>
-
-<script type="module">
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-import { getFirestore,collection,addDoc,getDocs,updateDoc,doc,increment,query,where } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
-
-const firebaseConfig={
-apiKey:"AIzaSyA2...",
-authDomain:"gtav-tuning.firebaseapp.com",
-projectId:"gtav-tuning"
-}
-
-const app=initializeApp(firebaseConfig)
-const auth=getAuth()
-const db=getFirestore()
-const provider=new GoogleAuthProvider()
-
-let currentUser=null
-
-window.googleLogin=()=>signInWithPopup(auth,provider)
-window.logoutUser=()=>signOut(auth)
-
-onAuthStateChanged(auth,(user)=>{
-
-currentUser=user
-
-const box=document.getElementById("userBox")
-
-if(user){
-
-box.innerHTML=`
-<img src="${user.photoURL}">
-${user.displayName}
-<button onclick="logoutUser()">Cerrar</button>
-`
-
-}else{
-
-box.innerHTML=`
-<button onclick="googleLogin()">Login Google</button>
-`
-
-}
-
-})
-
-window.sendQuestion=async function(){
-
-if(!currentUser){
-alert("Debes iniciar sesión con Google para hacer una pregunta")
-return
-}
-
-const text=document.getElementById("questionText").value
-
-if(text.trim()==""){
-alert("Escribe una pregunta")
-return
-}
-
-await addDoc(collection(db,"questions"),{
-text,
-user:currentUser.displayName,
-likes:0,
-dislikes:0
-})
-
-document.getElementById("questionText").value=""
-
-loadQuestions()
-
-}
-
-window.sendAnswer=async function(qid){
-
-if(!currentUser){
-alert("Debes iniciar sesión con Google para responder")
-return
-}
-
-const text=document.getElementById("answer-"+qid).value
-
-if(text.trim()==""){
-alert("Escribe una respuesta")
-return
-}
-
-await addDoc(collection(db,"answers"),{
-qid,
-text,
-user:currentUser.displayName,
-likes:0,
-dislikes:0
-})
-
-loadQuestions()
-
-}
-
-async function loadAnswers(qid,container){
-
-const q=query(collection(db,"answers"),where("qid","==",qid))
-const snap=await getDocs(q)
-
-snap.forEach(d=>{
-
-const data=d.data()
-
-const div=document.createElement("div")
-div.className="answer"
-
-div.innerHTML=`
-<b>${data.user}</b><br>
-${data.text}<br>
-
-👍 ${data.likes}
-<button onclick="voteAnswer('${d.id}','likes')">👍</button>
-
-👎 ${data.dislikes}
-<button onclick="voteAnswer('${d.id}','dislikes')">👎</button>
-`
-
-container.appendChild(div)
-
-})
-
-}
-
-window.loadQuestions=async function(){
-
-const container=document.getElementById("faqContainer")
-container.innerHTML=""
-
-const querySnapshot=await getDocs(collection(db,"questions"))
-
-querySnapshot.forEach(async(docData)=>{
-
-const data=docData.data()
-
-const div=document.createElement("div")
-div.className="faq-item"
-
-div.innerHTML=`
-<b>${data.user}</b><br>
-<p>${data.text}</p>
-
-👍 ${data.likes}
-<button onclick="vote('${docData.id}','likes')">👍</button>
-
-👎 ${data.dislikes}
-<button onclick="vote('${docData.id}','dislikes')">👎</button>
-
-<div id="answers-${docData.id}"></div>
-
-<textarea id="answer-${docData.id}" placeholder="Responder"></textarea>
-<button onclick="sendAnswer('${docData.id}')">Responder</button>
-`
-
-container.appendChild(div)
-
-loadAnswers(docData.id,document.getElementById("answers-"+docData.id))
-
-})
-
-}
-
-window.vote=async function(id,type){
-await updateDoc(doc(db,"questions",id),{[type]:increment(1)})
-loadQuestions()
-}
-
-window.voteAnswer=async function(id,type){
-await updateDoc(doc(db,"answers",id),{[type]:increment(1)})
-loadQuestions()
-}
-
-loadQuestions()
-
 </script>
 
 </body>
