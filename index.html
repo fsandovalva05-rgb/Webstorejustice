@@ -177,6 +177,13 @@ margin:auto;
 text-align:center;
 }
 
+#userBox{
+margin-right:90px;
+display:flex;
+align-items:center;
+gap:8px;
+}
+
 #userBox img{
 width:28px;
 border-radius:50%;
@@ -189,13 +196,21 @@ position:fixed;
 bottom:20px;
 right:20px;
 background:#5865F2;
-color:white;
-padding:15px 18px;
+width:55px;
+height:55px;
+display:flex;
+align-items:center;
+justify-content:center;
 border-radius:50%;
-font-size:22px;
 box-shadow:0 0 20px #5865F2;
 cursor:pointer;
 z-index:999;
+transition:0.3s;
+}
+
+.discord-button:hover{
+transform:scale(1.1);
+box-shadow:0 0 30px #5865F2;
 }
 
 </style>
@@ -314,7 +329,9 @@ Incluye todo lo anterior
 </section>
 
 <div class="discord-button" onclick="window.open('https://discord.gg/aaQUBXqchE')">
-💬
+
+<img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" width="28">
+
 </div>
 
 <script>
