@@ -1,15 +1,16 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>GTA Mods Store</title>
+<title>GTAVTUNING - Justice Packs</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- PAYPAL -->
 <script src="https://www.paypalobjects.com/ncp/cart/cart.js" data-merchant-id="9XJYURW442CAG"></script>
 
-<!-- FUENTE GTA STYLE -->
+<!-- FUENTE -->
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
 
 <style>
@@ -33,21 +34,27 @@ nav{
 background:#111;
 padding:20px;
 display:flex;
-justify-content:space-between;
+flex-direction:column;
 align-items:center;
 border-bottom:2px solid #ff7b00;
 }
 
 .logo{
-font-size:24px;
+font-size:26px;
 color:#ff7b00;
 font-weight:bold;
-letter-spacing:2px;
+letter-spacing:3px;
+margin-bottom:10px;
+}
+
+.menu{
+display:flex;
+justify-content:center;
+gap:30px;
 }
 
 .menu a{
 color:white;
-margin-left:20px;
 text-decoration:none;
 transition:0.3s;
 }
@@ -130,11 +137,7 @@ opacity:0.8;
 margin-bottom:20px;
 }
 
-paypal-add-to-cart-button{
-transform:scale(1.1);
-}
-
-/* CARRITO FLOTANTE */
+/* CARRITO */
 
 .cart-floating{
 
@@ -170,7 +173,7 @@ opacity:0.7;
 <nav>
 
 <div class="logo">
-GTA MODS STORE
+GTAVTUNING
 </div>
 
 <div class="menu">
@@ -181,11 +184,12 @@ GTA MODS STORE
 
 </nav>
 
-<!-- BOTON CARRITO -->
+<!-- CARRITO -->
 
 <div class="cart-floating">
 
 <paypal-cart-button data-id="pp-view-cart"></paypal-cart-button>
+
 <script>
 cartPaypal.Cart({ id: "pp-view-cart" })
 </script>
@@ -196,7 +200,7 @@ cartPaypal.Cart({ id: "pp-view-cart" })
 
 <section class="hero">
 
-<h1>Premium GTA Mods Packs</h1>
+<h1>Justice Packs</h1>
 
 </section>
 
@@ -240,7 +244,7 @@ $10
 </div>
 
 <div class="features">
-✔ Todos los Starter<br>
+✔ Todo lo del Starter<br>
 ✔ Scripts avanzados<br>
 ✔ Mapas extra
 </div>
@@ -282,9 +286,10 @@ cartPaypal.AddToCart({ id: "B692SZZ28BSJ8" })
 
 <footer>
 
-© 2026 GTA Mods Store - All rights reserved
+© 2026 GTAVTUNING - Justice Packs
 
 </footer>
 
 </body>
 </html>
+```
