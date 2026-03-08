@@ -352,28 +352,79 @@ document.getElementById(id).classList.add("active")
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-import { getFirestore,collection,addDoc,getDocs,updateDoc,doc,increment,query,where } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-analytics.js";
 
-const firebaseConfig={
-apiKey:"AIzaSyA2...",
-authDomain:"gtav-tuning.firebaseapp.com",
-projectId:"gtav-tuning"
+import { 
+getAuth,
+GoogleAuthProvider,
+signInWithPopup,
+signOut,
+onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+import {
+getFirestore,
+collection,
+addDoc,
+getDocs,
+updateDoc,
+doc,
+increment,
+query,
+where
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+const firebaseConfig = {
+apiKey: "AIzaSyA2F4C7Oy4Kf63OtmNXbcMt2VFlYabw984",
+authDomain: "gtav-tuning.firebaseapp.com",
+projectId: "gtav-tuning",
+storageBucket: "gtav-tuning.firebasestorage.app",
+messagingSenderId: "1041891301932",
+appId: "1:1041891301932:web:9fcd9ad3c9c67838ab4f89",
+measurementId: "G-XMJLEN8SEZ"
+};
+
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+const auth = getAuth();
+const db = getFirestore();
+const provider = new GoogleAuthProvider();
+
+let currentUser = null;
+
+
+// LOGIN GOOGLE
+
+window.googleLogin = async function(){
+
+try{
+
+await signInWithPopup(auth, provider)
+
+}catch(err){
+
+alert(err.message)
+
 }
 
-const app=initializeApp(firebaseConfig)
-const auth=getAuth()
-const db=getFirestore()
-const provider=new GoogleAuthProvider()
+}
 
-let currentUser=null
 
-window.googleLogin=()=>signInWithPopup(auth,provider)
-window.logoutUser=()=>signOut(auth)
+// LOGOUT
+
+window.logoutUser = async function(){
+
+await signOut(auth)
+
+}
+
+
+// MOSTRAR USUARIO EN NAVBAR
 
 onAuthStateChanged(auth,(user)=>{
 
-currentUser=user
+currentUser = user
 
 const box=document.getElementById("userBox")
 
@@ -394,6 +445,9 @@ box.innerHTML=`
 }
 
 })
+
+
+// ENVIAR PREGUNTA
 
 window.sendQuestion=async function(){
 
@@ -422,6 +476,9 @@ loadQuestions()
 
 }
 
+
+// RESPONDER
+
 window.sendAnswer=async function(qid){
 
 if(!currentUser){
@@ -447,6 +504,9 @@ dislikes:0
 loadQuestions()
 
 }
+
+
+// CARGAR RESPUESTAS
 
 async function loadAnswers(qid,container){
 
@@ -476,6 +536,9 @@ container.appendChild(div)
 })
 
 }
+
+
+// CARGAR PREGUNTAS
 
 window.loadQuestions=async function(){
 
@@ -515,10 +578,16 @@ loadAnswers(docData.id,document.getElementById("answers-"+docData.id))
 
 }
 
+
+// VOTAR PREGUNTA
+
 window.vote=async function(id,type){
 await updateDoc(doc(db,"questions",id),{[type]:increment(1)})
 loadQuestions()
 }
+
+
+// VOTAR RESPUESTA
 
 window.voteAnswer=async function(id,type){
 await updateDoc(doc(db,"answers",id),{[type]:increment(1)})
@@ -528,6 +597,6 @@ loadQuestions()
 loadQuestions()
 
 </script>
-
+  
 </body>
 </html>
