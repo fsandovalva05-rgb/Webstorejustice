@@ -268,7 +268,7 @@ border-radius:8px;
 
 <div class="menu">
 <a href="#" onclick="showSection('packs')">Justice Packs</a>
-<a href="#" onclick="showSection('valoraciones')">Valoraciones</a>
+<a href="#" onclick="showSection('')">Valoraciones</a>
 <a href="#" onclick="showSection('faq')">Comunidad & FAQ</a>
 <a href="#" onclick="showSection('payments')">Medios de pago</a>
 <a href="#" onclick="showSection('catalogo')">Catálogo</a>
@@ -347,6 +347,7 @@ Incluye todo lo anterior
 
 </div>
 </section>
+
 <section id="valoraciones" class="section">
 
 <h2 style="margin-bottom:20px;">Valoraciones</h2>
@@ -354,7 +355,8 @@ Incluye todo lo anterior
 <div class="card" style="max-width:600px;margin:auto;">
 
 <h3>⭐ Califica nuestro servicio</h3>
-<div id="stars"></div>
+
+<!-- SOLO UN STARS -->
 <div id="stars" style="font-size:30px;margin:15px 0;"></div>
 
 <p id="avgRating">Promedio: 0 ⭐</p>
@@ -362,12 +364,13 @@ Incluye todo lo anterior
 <div id="ratingBars"></div>
 
 <textarea id="reviewText" placeholder="Deja tu opinión..."></textarea>
+
 <button onclick="submitReview()">Enviar valoración</button>
 
 </div>
 
 <div id="reviewsList" style="margin-top:30px;"></div>
-  
+
 </section>
   
 <section id="faq" class="section">
