@@ -220,7 +220,43 @@ transition:0.3s;
 transform:scale(1.1);
 box-shadow:0 0 30px #5865F2;
 }
+/* 👇 PEGÁ ESTO ABAJO */
+#stars span{
+cursor:pointer;
+font-size:30px;
+margin:0 3px;
+color:#555;
+transition:0.2s;
+}
 
+#stars span.active{
+color:#ff7b00;
+}
+
+#ratingBars{
+margin:15px 0;
+}
+
+.bar{
+height:8px;
+background:#222;
+margin:5px 0;
+border-radius:5px;
+overflow:hidden;
+}
+
+.bar-fill{
+height:100%;
+background:#ff7b00;
+width:0%;
+}
+
+.review{
+background:#111;
+padding:15px;
+margin-top:10px;
+border-radius:8px;
+}
 </style>
 </head>
 
@@ -315,22 +351,22 @@ Incluye todo lo anterior
 
 <h2 style="margin-bottom:20px;">Valoraciones</h2>
 
-<div class="card" style="max-width:700px;margin:auto;padding:20px;">
+<div class="card" style="max-width:600px;margin:auto;">
 
-<h3 style="margin-bottom:10px;">💬 Opiniones de jugadores</h3>
+<h3>⭐ Califica nuestro servicio</h3>
 
-<p style="margin-bottom:15px;font-size:14px;color:#aaa;">
-Vista en vivo del canal de valoraciones del servidor
-</p>
+<div id="stars" style="font-size:30px;margin:15px 0;"></div>
 
-<iframe 
-src="https://discord.com/widget?id=834598887682605116&theme=dark" 
-width="100%" 
-height="350" 
-frameborder="0">
-</iframe>
+<p id="avgRating">Promedio: 0 ⭐</p>
+
+<div id="ratingBars"></div>
+
+<textarea id="reviewText" placeholder="Deja tu opinión..."></textarea>
+<button onclick="submitReview()">Enviar valoración</button>
 
 </div>
+
+<div id="reviewsList" style="margin-top:30px;"></div>
   
 </section>
   
@@ -526,7 +562,127 @@ dislikes:0
 document.getElementById("questionText").value=""
 
 loadQuestions()
+let selectedRating = 0
 
+function renderStars(value = 0){
+const container = document.getElementById("stars")
+if(!container) return
+
+container.innerHTML = ""
+
+for(let i=1;i<=5;i++){
+const star = document.createElement("span")
+star.innerHTML = "★"
+
+if(i <= value) star.classList.add("active")
+
+star.onclick = () => {
+selectedRating = i
+renderStars(i)
+}
+
+container.appendChild(star)
+}
+}
+
+renderStars()
+
+window.submitReview = async function(){
+
+if(!currentUser){
+alert("Debes iniciar sesión")
+return
+}
+
+if(selectedRating === 0){
+alert("Selecciona una puntuación")
+return
+}
+
+const text = document.getElementById("reviewText").value
+
+const q = query(collection(db,"ratings"), where("user","==",currentUser.uid))
+const snap = await getDocs(q)
+
+if(!snap.empty){
+snap.forEach(async d=>{
+await updateDoc(doc(db,"ratings",d.id),{
+value:selectedRating,
+text:text
+})
+})
+}else{
+await addDoc(collection(db,"ratings"),{
+user:currentUser.uid,
+name:currentUser.displayName,
+value:selectedRating,
+text:text
+})
+}
+
+document.getElementById("reviewText").value = ""
+selectedRating = 0
+renderStars()
+
+loadRatings()
+}
+
+async function loadRatings(){
+
+const snap = await getDocs(collection(db,"ratings"))
+
+let total=0, count=0
+let distribution = [0,0,0,0,0]
+
+const list = document.getElementById("reviewsList")
+if(!list) return
+
+list.innerHTML=""
+
+snap.forEach(docData=>{
+const data = docData.data()
+
+total += data.value
+count++
+distribution[data.value-1]++
+
+const div = document.createElement("div")
+div.className="review"
+
+div.innerHTML = `
+<b>${data.name}</b><br>
+${"★".repeat(data.value)}<br>
+${data.text || ""}
+`
+
+list.appendChild(div)
+})
+
+let avg = count ? (total/count).toFixed(1) : 0
+
+const avgEl = document.getElementById("avgRating")
+if(avgEl){
+avgEl.innerText = `Promedio: ${avg} ⭐ (${count} votos)`
+}
+
+const bars = document.getElementById("ratingBars")
+if(!bars) return
+
+bars.innerHTML=""
+
+for(let i=5;i>=1;i--){
+let percent = count ? (distribution[i-1]/count)*100 : 0
+
+bars.innerHTML += `
+${i} ⭐
+<div class="bar">
+<div class="bar-fill" style="width:${percent}%"></div>
+</div>
+`
+}
+}
+
+loadRatings()
 }
 
 
