@@ -268,7 +268,7 @@ border-radius:8px;
 
 <div class="menu">
 <a href="#" onclick="showSection('packs')">Justice Packs</a>
-<a href="#" onclick="showSection('')">Valoraciones</a>
+<a href="#" onclick="showSection('valoraciones')">Valoraciones</a>
 <a href="#" onclick="showSection('faq')">Comunidad & FAQ</a>
 <a href="#" onclick="showSection('payments')">Medios de pago</a>
 <a href="#" onclick="showSection('catalogo')">Catálogo</a>
@@ -484,7 +484,7 @@ const db = getFirestore();
 const provider = new GoogleAuthProvider();
 
 let currentUser = null;
-
+let selectedRating = 0;
 
 // LOGIN GOOGLE
 
@@ -565,72 +565,7 @@ dislikes:0
 document.getElementById("questionText").value=""
 
 loadQuestions()
-let selectedRating = 0
-window.addEventListener("DOMContentLoaded", () => {
-  renderStars()
-  loadRatings()
-})
-function renderStars(value = 0){
-const container = document.getElementById("stars")
-if(!container) return
 
-container.innerHTML = ""
-
-for(let i=1;i<=5;i++){
-const star = document.createElement("span")
-star.innerHTML = "★"
-
-if(i <= value) star.classList.add("active")
-
-star.onclick = () => {
-selectedRating = i
-renderStars(i)
-}
-
-container.appendChild(star)
-}
-}
-
-renderStars()
-
-window.submitReview = async function(){
-
-if(!currentUser){
-alert("Debes iniciar sesión")
-return
-}
-
-if(selectedRating === 0){
-alert("Selecciona una puntuación")
-return
-}
-
-const text = document.getElementById("reviewText").value
-
-const q = query(collection(db,"ratings"), where("user","==",currentUser.uid))
-const snap = await getDocs(q)
-
-if(!snap.empty){
-snap.forEach(async d=>{
-await updateDoc(doc(db,"ratings",d.id),{
-value:selectedRating,
-text:text
-})
-})
-}else{
-await addDoc(collection(db,"ratings"),{
-user:currentUser.uid,
-name:currentUser.displayName,
-value:selectedRating,
-text:text
-})
-}
-
-document.getElementById("reviewText").value = ""
-selectedRating = 0
-renderStars()
-
-loadRatings()
 }
 
 async function loadRatings(){
@@ -691,7 +626,21 @@ ${i} ⭐
 loadRatings()
 }
 
+function renderStars(value = 0){
+...
+}
 
+renderStars()
+
+window.submitReview = async function(){
+...
+}
+
+async function loadRatings(){
+...
+}
+
+loadRatings()
 // RESPONDER
 
 window.sendAnswer=async function(qid){
